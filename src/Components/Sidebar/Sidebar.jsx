@@ -8,6 +8,7 @@ import gs1logowhite from '../../Images/gs1logowhite.png'
 import profile from '../../Images/profile.png'
 import shipmentverificationicon from '../../Images/shipmentverificationIcon.png'
 import  verifiedproducticon  from "../../Images/verifedproduct.png";
+import backarrow from "../../Images/backarrow.png";
 import logout from "../../Images/logout.png"
 
 const SideBar = () => {
@@ -98,18 +99,29 @@ const SideBar = () => {
           </div>
           <div
             className="flex justify-center items-center cursor-pointer mt-1 px-4"
-            onClick={() => navigate("/retailer-profile")}
           >
+           <div className='flex justify-end items-center px-0 mr-4'>
+                  <span onClick={() => navigate(-1)} className='cursor-pointer'
+                  >
+                  <img src={backarrow}
+                    className='h-8 w-8 text-secondary mr-3'
+                    style={{ filter: 'invert(1)' }}
+                    alt=''
+                  />
+                </span>
+              </div>
             <img
+              onClick={() => navigate("/admin-profile")}
               src={
                 // currentUser?.user?.image
                 //   ? imagePath + currentUser?.user?.image
                 //   : memberprofile
                 profile
-              }
+                }
               className="h-7 w-7 bg-white rounded-full"
               alt=""
             />
+
           </div>
         </div>
       </div>

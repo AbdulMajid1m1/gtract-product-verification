@@ -18,9 +18,14 @@ const DigitalLinkTab = () => {
 
     
     // get that sesstion storage data
-    const getGtinData = sessionStorage.getItem("productData");
-    const gtinData = JSON.parse(getGtinData);
-    console.log(gtinData);
+    // const getGtinData = sessionStorage.getItem("productData");
+    // const gtinData = JSON.parse(getGtinData);
+    // console.log(gtinData);
+
+    // get the barcode sesstion data
+    const getBarcodeData = sessionStorage.getItem("barcode");
+    const barcodeData = JSON.parse(getBarcodeData);
+    // console.log(barcodeData);
 
   //Digital Link Tab
   const handleOptionChange = (option) => {
@@ -29,7 +34,7 @@ const DigitalLinkTab = () => {
     switch (option) {
       case "Safety-Information":
         newRequest
-          .get(`/getSafetyInformationByGtin/${gtinData}`)
+          .get(`/getSafetyInformationByGtin/${barcodeData}`)
           .then((response) => {
             console.log(response.data);
             setSafetyInformation(response.data);
@@ -46,7 +51,7 @@ const DigitalLinkTab = () => {
 
       case "Promotional-Offers":
         newRequest
-          .get(`/getPromotionalOffersByGtin/${gtinData}`)
+          .get(`/getPromotionalOffersByGtin/${barcodeData}`)
           .then((response) => {
             console.log(response.data);
             setPromotionalOffers(response.data);
@@ -60,7 +65,7 @@ const DigitalLinkTab = () => {
 
       case "Product-Contents":
         newRequest
-          .get(`/getProductContentByGtin/${gtinData}`)
+          .get(`/getProductContentByGtin/${barcodeData}`)
           .then((response) => {
             console.log(response.data);
             console.log("called");
@@ -75,7 +80,7 @@ const DigitalLinkTab = () => {
 
       case "Product-Location":
         newRequest
-          .get(`/getProductLocationOriginByGtin/${gtinData}`)
+          .get(`/getProductLocationOriginByGtin/${barcodeData}`)
           .then((response) => {
             console.log(response.data);
             setProductLocationofOrigin(response.data);
@@ -89,7 +94,7 @@ const DigitalLinkTab = () => {
 
       case "ProductRecall":
         newRequest
-          .get(`/getProductsRecallByGtin/${gtinData}`)
+          .get(`/getProductsRecallByGtin/${barcodeData}`)
           .then((response) => {
             console.log(response.data);
             setProductRecall(response.data);
@@ -103,7 +108,7 @@ const DigitalLinkTab = () => {
 
       case "Recipe":
         newRequest
-          .get(`/getRecipeDataByGtin/${gtinData}`)
+          .get(`/getRecipeDataByGtin/${barcodeData}`)
           .then((response) => {
             console.log(response.data);
             setRecipe(response.data);
@@ -118,7 +123,7 @@ const DigitalLinkTab = () => {
       case "Packaging-Composition":
         newRequest
           .get(
-            `/getAlltblPkgCompositionDataByGtin/${gtinData}`
+            `/getAlltblPkgCompositionDataByGtin/${barcodeData}`
           )
           .then((response) => {
             console.log(response.data);
@@ -134,7 +139,7 @@ const DigitalLinkTab = () => {
 
       case "Electronic-Leaflets":
         newRequest
-          .get(`/getProductLeafLetsDataByGtin/${gtinData}`)
+          .get(`/getProductLeafLetsDataByGtin/${barcodeData}`)
           .then((response) => {
             console.log(response.data);
             setElectronicLeaflets(response.data);
