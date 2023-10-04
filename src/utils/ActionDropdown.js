@@ -11,7 +11,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 const ActionDropdown = ({ row, dropDownOptions }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-  
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -46,7 +46,15 @@ const ActionDropdown = ({ row, dropDownOptions }) => {
                 }}
             >
                 {dropDownOptions && dropDownOptions.map((option, index) => (
-                    <MenuItem key={index} onClick={option?.action ? () => option?.action(row) : null}>
+                    <MenuItem
+                        key={index}
+                        onClick={() => {
+                            if (option?.action) {
+                                option.action(row);
+                            }
+                            handleClose(); // Close the menu after executing the action
+                        }}
+                    >
                         <ListItemIcon>
                             {option?.icon}
                         </ListItemIcon>
