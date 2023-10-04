@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import { phpImagesBaseUrl } from '../../utils/config';
+import Miscellaneous from './Miscellaneous';
 
 
 // MUI Style 
@@ -259,7 +260,7 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
         </div>
 
         {/* Tabs Button */}
-        <div className="grid 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-4 grid-cols-2 gap-5">
+        <div className="grid 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 md:grid-cols-4 grid-cols-2 gap-5">
           <button
             className={`p-4 rounded ${activeTab === 'product-Infomation' ? 'bg-primary text-white' : 'bg-white text-primary'
               } shadow-md flex items-center justify-center`}
@@ -290,6 +291,14 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
             onClick={() => handleTabClick('Codification')}
           >
             Codification
+          </button>
+
+          <button
+            className={`p-4 rounded ${activeTab === 'Miscellaneous' ? 'bg-primary text-white' : 'bg-white text-primary'
+              } shadow-md flex items-center justify-center`}
+            onClick={() => handleTabClick('Miscellaneous')}
+          >
+            Miscellaneous
           </button>
         </div>
 
@@ -371,6 +380,16 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
           <div className="block shadow-lg">
               <div className='mt-2 border border-gray-300'>
                 <CodificationTab />
+              </div>
+          </div>
+        )}
+
+
+         {/* Fifth Tab */}
+         {activeTab === 'Miscellaneous' && (
+          <div className="block shadow-lg">
+              <div className='mt-2 border border-gray-300'>
+                <Miscellaneous />
               </div>
           </div>
         )}
