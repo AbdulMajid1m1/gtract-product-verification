@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import { phpImagesBaseUrl } from '../../utils/config';
+import Miscellaneous from './Miscellaneous';
 
 
 // MUI Style 
@@ -28,7 +29,7 @@ const style = {
   p: 4,
 };
 
-const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) => {
+const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barcode }) => {
   const [activeTab, setActiveTab] = useState('product-Infomation');
   const [data, setData] = useState(null);
   const [gtinData, setGtinData] = useState('');
@@ -36,6 +37,7 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
   const navigate = useNavigate();
   const { openSnackbar } = useContext(SnackbarContext);
 
+  console.log(barcode);
     // // this is the popup code
     // const [open, setOpen] = useState(false);
     // const handleOpen = () => {
@@ -52,22 +54,23 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
     // console.log(parsedRowData);
   
  
-  const shipmentRequestData = JSON.parse(sessionStorage.getItem('shipmentRequest'));
-  console.log(shipmentRequestData);
+  // const shipmentRequestData = JSON.parse(sessionStorage.getItem('shipmentRequest'));
+  // console.log(shipmentRequestData);
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
 
+  useEffect(() => {
   const handleGtinSearch = () => {
-    if (!gtinData) return;
-    newRequest.get(`/getGs1ProdProductsbyBarcode?barcode=${gtinData}`)
+    // if (!gtinData) return;
+    newRequest.get(`/getGs1ProdProductsbyBarcode?barcode=${barcode?.barcode}`)
       .then((response) => {
         console.log(response.data);
         setData(response.data[0]);
 
         // store that response in sesstion stroage
-        sessionStorage.setItem('productData', JSON.stringify(gtinData));
+        // sessionStorage.setItem('productData', JSON.stringify(gtinData));
 
         // empty the input field
         setGtinData('');
@@ -85,6 +88,10 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
       })
 
   };
+
+  
+  handleGtinSearch();
+},[])
 
   //Firts tab Table data 
   const products = [
@@ -109,29 +116,22 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
   ];
 
 
-  // Insert Api 
+  
+  // Update Product APi 
   const handleSubmit = async () => {
     setIsLoading(true);
 
 
 
     const apiBodyData = {
-      shipment_id: parseInt(shipmentRequestData?.shipment_id),
-      productnameenglish: data?.productnameenglish,
-      productnamearabic: data?.productnamearabic,
-      BrandName: data?.BrandName,
-      BrandNameAr: data?.BrandNameAr,
-      unit: data?.unit,
-      member_id: shipmentRequestData?.customer_id,
-      barcode: data?.barcode,
-      front_image: data?.front_image,
-      back_image: data?.back_image,
-
+      
+      id: barcode?.id,
+      is_verified: true,
     }
 
     console.log(apiBodyData);
     try {
-      const response = await newRequest.post("/insertShipmentProduct", apiBodyData)
+      const response = await newRequest.put("/updateShipmentProduct", apiBodyData)
 
       console.log(response?.data);
       // Swal.fire({
@@ -140,14 +140,15 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
       //   showConfirmButton: false,
       //   timer: 1500
       // })
-      openSnackbar("Product Added Successfully", "success");
+      openSnackbar("Product Updated Successfully", "success");
       handleRefetch();
       setData(null);
       setGtinData('');
+      setIsLoading(false);
       
       setTimeout(() => {
         handleClose();
-      }, 1500)
+      }, 3000)
 
       // navigate(-1)
 
@@ -161,6 +162,8 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
       //   text: error?.response?.data?.message ?? "something went wrong!",
       // })
       openSnackbar(error?.response?.data?.message ?? "something went wrong!", "error");
+      setIsLoading(false);
+      console.log(error);
 
     }
     finally {
@@ -196,7 +199,7 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
       }
 
 
-<Button style={{marginLeft: '294px', backgroundColor: '#1E3B8B', color: 'white'}} onClick={handleOpen}>{title}</Button>
+    <Button style={{marginLeft: '294px', backgroundColor: '#1E3B8B', color: 'white'}} onClick={handleOpen}>{title}</Button>
             <Modal
               open={open}
               // onClose={handleClose}
@@ -242,10 +245,10 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
             type='text'
             className='h-10 w-[80%] text-center font-semibold bg-green-300 rounded-md border border-gray-500 px-4'
             placeholder='Valide Barcode'
-            value={"6182000000113"}
+            value={barcode?.barcode}
             name='valide barcode'
             onChange={(e) => setGtinData(e.target.value)}
-            onBlur={handleGtinSearch}
+            // onBlur={handleGtinSearch}
           />
 
           <div className='w-[20%] flex justify-end px-5'>
@@ -259,9 +262,9 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
         </div>
 
         {/* Tabs Button */}
-        <div className="grid 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-4 grid-cols-2 gap-5">
+        <div className="grid 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 md:grid-cols-4 grid-cols-2 gap-5">
           <button
-            className={`p-4 rounded ${activeTab === 'product-Infomation' ? 'bg-primary text-white' : 'bg-white text-primary'
+            className={`p-4 truncate rounded ${activeTab === 'product-Infomation' ? 'bg-primary text-white' : 'bg-white text-primary'
               } shadow-md flex items-center justify-center`}
             onClick={() => handleTabClick('product-Infomation')}
           >
@@ -290,6 +293,14 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
             onClick={() => handleTabClick('Codification')}
           >
             Codification
+          </button>
+
+          <button
+            className={`p-4 rounded ${activeTab === 'Miscellaneous' ? 'bg-primary text-white' : 'bg-white text-primary'
+              } shadow-md flex items-center justify-center`}
+            onClick={() => handleTabClick('Miscellaneous')}
+          >
+            Miscellaneous
           </button>
         </div>
 
@@ -371,6 +382,16 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch }) =>
           <div className="block shadow-lg">
               <div className='mt-2 border border-gray-300'>
                 <CodificationTab />
+              </div>
+          </div>
+        )}
+
+
+         {/* Fifth Tab */}
+         {activeTab === 'Miscellaneous' && (
+          <div className="block shadow-lg">
+              <div className='mt-2 border border-gray-300'>
+                <Miscellaneous />
               </div>
           </div>
         )}
