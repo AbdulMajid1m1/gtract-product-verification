@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { shipmentVerificationColumn, verifiedProductColumn } from "../../utils/datatablesource";
+import { shipmentProductsColumns, shipmentVerificationColumn, verifiedProductColumn } from "../../utils/datatablesource";
 
 import { useNavigate } from "react-router-dom";
 import newRequest from "../../utils/userRequest";
@@ -15,18 +15,12 @@ const VerifiedProduct = () => {
   const { openSnackbar } = useContext(SnackbarContext);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [secondGridData, setSecondGridData] = useState([]);
   const [filteredData, setFilteredData] = useState([]); // for the map markers
   const { currentUser } = useContext(CurrentUserContext);
   const navigate = useNavigate()
   console.log(currentUser)
-
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
-  const resetSnakeBarMessages = () => {
-    setError(null);
-    setMessage(null);
-
-  };
+  const [isShipmentProductDataLoading, setIsShipmentProductDataLoading] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,9 +39,40 @@ const VerifiedProduct = () => {
     };
 
     fetchData(); // Calling the function within useEffect, not inside itself
-  }, []); // Empty array dependency ensures this useEffect runs once on component mount
+    const getAllShipmentsProducts = async () => {
+      setIsShipmentProductDataLoading(true)
+      try {
 
+        const response = await newRequest.get("/getAllVerifiedShipmentProducts")
 
+        console.log(response?.data);
+
+        setSecondGridData(response?.data ?? [])
+        setFilteredData(response?.data ?? [])
+      }
+      catch (error) {
+        console.log(error);
+        // setError(error?.response?.data?.message ?? "Something went wrong")
+
+      }
+      finally {
+        setIsShipmentProductDataLoading(false)
+      }
+    };
+    getAllShipmentsProducts();
+  }, []);
+
+  const handleRowClickInParent = (item) => {
+
+    if (item.length === 0) {
+      setFilteredData(secondGridData)
+      return
+    }
+    const filteredData = secondGridData.filter((singleItem) => {
+      return Number(singleItem?.shipment_id) == Number(item[0]?.shipment_id)
+    })
+    setFilteredData(filteredData)
+  }
 
   return (
     <div>
@@ -58,11 +83,12 @@ const VerifiedProduct = () => {
         <div className='h-auto w-full shadow-xl'>
           <div style={{ marginLeft: '-11px', marginRight: '-11px' }}>
 
-            <DataTable data={data} title="Verified Product" columnsName={verifiedProductColumn}
+            <DataTable data={data} title="Verified Shipments" columnsName={verifiedProductColumn}
               loading={isLoading}
               secondaryColor="secondary"
-
-
+              checkboxSelection='disabled'
+              handleRowClickInParent={handleRowClickInParent}
+              actionColumnVisibility={false}
               // dropDownOptions={[
               //   {
               //     label: "View",
@@ -83,7 +109,7 @@ const VerifiedProduct = () => {
 
               //   },
               // ]}
-              uniqueId="shipmentVerification"
+              uniqueId="verfiedShipmentsId"
 
             />
           </div>
@@ -92,6 +118,49 @@ const VerifiedProduct = () => {
 
 
 
+        </div>
+
+        <div style={{ marginLeft: '-11px', marginRight: '-11px' }}>
+          <DataTable data={filteredData} title="Shipment Products"
+            secondaryColor="secondary"
+            columnsName={shipmentProductsColumns}
+            backButton={true}
+            checkboxSelection="disabled"
+            actionColumnVisibility={false}
+            // dropDownOptions={[
+            //   {
+            //     label: "View",
+            //     icon: (
+            //       <VisibilityIcon
+            //         fontSize="small"
+            //         color="action"
+            //         style={{ color: "rgb(37 99 235)" }}
+            //       />
+            //     ),
+            //     action: (row) => {
+            //       sessionStorage.setItem("shipmentRequest", JSON.stringify(row));
+            //       navigate("/new-shipment-request")
+
+            //     },
+            //   },
+            //   {
+            //     label: "Submit Request",
+            //     icon: <SwapHorizIcon fontSize="small" color="action" style={{ color: "rgb(37 99 235)" }} />
+            //     ,
+            //     action: handleStatusChange,
+
+            //   },
+            //   {
+            //     label: "Delete",
+            //     icon: <DeleteIcon fontSize="small" style={{ color: '#FF0032' }} />
+            //     ,
+            //     action: handleShipmentDelete,
+            //   },
+            // ]}
+            uniqueId={"shipmentRequestProductId"}
+            loading={isShipmentProductDataLoading}
+
+          />
         </div>
       </div>
     </div>

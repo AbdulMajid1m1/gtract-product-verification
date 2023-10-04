@@ -1,7 +1,7 @@
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import imageLiveUrl from "./urlConverter/imageLiveUrl";
 import { useGridApiContext } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 function ImageEditInputCell(props) {
   const { id, field, fieldUpdated, value, mode } = props;
@@ -266,3 +266,99 @@ export const ShipmentDocColumns = [
 
   },
 ]
+
+export const shipmentProductsColumns = [
+  {
+    field: "id",
+    headerName: "ID",
+    width: 120,
+    editable: true,
+  },
+  {
+    field: "shipment_id",
+    headerName: "Shipment ID",
+    width: 150,
+    editable: true,
+  },
+  {
+    field: "productnameenglish",
+    headerName: "Product Name (English)",
+    width: 220,
+    editable: true,
+  },
+  {
+    field: "productnamearabic",
+    headerName: "Product Name (Arabic)",
+    width: 220,
+    editable: true,
+  },
+  {
+    field: "BrandName",
+    headerName: "Brand Name",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "BrandNameAr",
+    headerName: "Brand Name (Arabic)",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "unit",
+    headerName: "Unit",
+    width: 120,
+    editable: true,
+  },
+  {
+    field: "member_id",
+    headerName: "Member ID",
+    width: 150,
+    editable: true,
+  },
+  {
+    field: "barcode",
+    headerName: "Barcode",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "front_image",
+    headerName: "Front Image",
+    width: 220,  // You might want to render this as an image or link
+    editable: true,
+  },
+  {
+    field: "back_image",
+    headerName: "Back Image",
+    width: 220,  // Similarly, you might want to render this as an image or link
+    editable: true,
+  },
+  // {
+  //   field: "is_verified",
+  //   headerName: "Is Verified",
+  //   width: 150,
+  //   editable: true,
+  //   renderCell: (params) => params.value ? 'Yes' : 'No',  // Render as 'Yes' or 'No' instead of true or false
+  // },
+  {
+    field: "is_verified",
+    headerName: "Is Verified",
+    width: 150,
+    editable: false,  // Making this non-editable as it's a custom rendered cell
+    renderCell: (params) => (
+      <Button
+        variant="contained"
+        style={{
+          borderRadius: '50px',  // Rounded border
+          padding: '2px 12px',
+          color: 'white',  // White text color
+          fontSize: '0.8rem',
+          backgroundColor: params.value ? 'green' : 'red',  // Green for verified, Red for not verified
+        }}
+      >
+        {params.value ? 'Verified' : 'Not Verified'}
+      </Button>
+    ),
+  }
+];

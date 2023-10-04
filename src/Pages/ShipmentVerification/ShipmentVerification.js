@@ -7,6 +7,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import newRequest from "../../utils/userRequest";
 import DataTable from "../../Components/Datatable/Datatable";
 import { SnackbarContext } from "../../Contexts/SnackbarContext";
+import Swal from "sweetalert2";
 
 
 const ShipmentVerification = () => {
@@ -18,7 +19,7 @@ const ShipmentVerification = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]); // for the map markers
   const navigate = useNavigate()
- 
+
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   const resetSnakeBarMessages = () => {
@@ -54,9 +55,35 @@ const ShipmentVerification = () => {
     navigate('/verify-shipment')
   }
 
-  const handleEdit = (row) => {
-    navigate('/verify-shipment')
-  }
+  const handleShipmentApproval = async (row) => {
+    try {
+      const response = await newRequest.put('/updateShipmentRequestStatus', {
+        shipment_id: row.shipment_id,
+        status: 'approved'
+      });
+
+      Swal.fire({
+        title: 'Success!',
+        text: response.data.message,
+        icon: 'success',
+        confirmButtonText: 'Okay',
+        timer: 2000,
+        timerProgressBar: true,
+      });
+
+      // on approve, remove the row from the table
+      const newData = data.filter((item) => item.shipment_id !== row.shipment_id);
+      setData(newData);
+
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: error?.response?.data?.message || 'An error occurred while approving shipment',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+      });
+    }
+  };
 
 
 
@@ -90,7 +117,7 @@ const ShipmentVerification = () => {
                   label: "Approve Shipment",
                   icon: <CheckCircleIcon fontSize="small" color="action" style={{ color: "rgb(37 99 235)" }} />
                   ,
-                  action: handleEdit
+                  action: handleShipmentApproval
 
                 },
               ]}
