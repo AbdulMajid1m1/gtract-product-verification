@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { RiseLoader } from 'react-spinners';
 import gs1logo from '../../Images/gs1logowhite.png'
+import phpRequest from '../../utils/phpRequest';
 
 const Login = () => {
 
@@ -17,7 +18,7 @@ const Login = () => {
     e.preventDefault();
 
     setIsLoading(true);
-    axios.post('https://gs1.org.sa/api/admin/user/login', { email: email, password: password, status: 1 })
+    phpRequest.post('/admin/user/login', { email: email, password: password, status: 1 })
       .then((response) => {
         console.log(response)
         setIsLoading(false)

@@ -177,7 +177,7 @@ const Miscellaneous = () => {
             </span>
             
             <span
-                className={`bg-[#00acee] py-2 flex justify-start px-1 rounded-md text-white items-center gap-2 cursor-pointer ${selectedOption === "Promotional-Offers" ? "bg-yellow-500" : ""
+                className={`bg-[#00acee] py-2 flex justify-start px-1 rounded-md text-white items-center gap-2 cursor-pointer ${selectedOption === "Suggested-Retail-Price" ? "bg-yellow-500" : ""
                 }`}
                 onClick={() => handleOptionChange("Suggested-Retail-Price")}
             >
@@ -190,7 +190,7 @@ const Miscellaneous = () => {
             </span>
             
             <span
-                className={`bg-[#0072b1] py-2 flex justify-start px-1 rounded-md text-white items-center gap-2 cursor-pointer ${selectedOption === "Product-Contents" ? "bg-yellow-500" : ""
+                className={`bg-[#0072b1] py-2 flex justify-start px-1 rounded-md text-white items-center gap-2 cursor-pointer ${selectedOption === "Other-Importers" ? "bg-yellow-500" : ""
                 }`}
                 onClick={() => handleOptionChange("Other-Importers")}
             >
