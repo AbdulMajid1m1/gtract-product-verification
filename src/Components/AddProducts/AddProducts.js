@@ -119,7 +119,12 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
   
   // Update Product APi 
   const handleSubmit = async () => {
-    setIsLoading(true);
+    if (barcode?.is_verified === true) {
+      openSnackbar("Product Already Verified");
+      return;
+    }
+    
+      setIsLoading(true);
 
 
 
