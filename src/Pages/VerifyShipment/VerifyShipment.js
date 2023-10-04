@@ -245,7 +245,7 @@ const VerifyShipment = () => {
 
                         </div>
                     </section>
- 
+
                 </div>
 
             </div>
