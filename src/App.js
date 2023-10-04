@@ -10,6 +10,7 @@ import { SnackbarProvider } from "./Contexts/SnackbarContext";
 import ShipmentVerification from "./Pages/ShipmentVerification/ShipmentVerification";
 import VerifiedProduct from "./Pages/VerifiedProduct/VerifiedProduct";
 import VerifyShipment from "./Pages/VerifyShipment/VerifyShipment";
+import ShipmentDocUpload from "./Pages/ShipmentDocUpload/ShipmentDocUpload";
 
 const App = () => {
   const MainLayout = ({ children }) => {
@@ -40,6 +41,7 @@ const App = () => {
                           <Route path="/shipment-verification" element={<ShipmentVerification />} />
                           <Route path="/verified-product" element={<VerifiedProduct />} />
                           <Route path="/verify-shipment" element={<VerifyShipment />} />
+                          <Route path="/shipment-docs/:productId" element={<ShipmentDocUpload />} />
                           {/* <Route path="/inventory-items" element={<InventoryItems />} /> */}
                         </Routes>
                       </MainLayout>

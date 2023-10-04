@@ -41,6 +41,8 @@ const DataTable = ({
   AssignPickListBtn,
   sendInvitation,
   handleSendInvitationPopup,
+  AddDocBtn,
+  handleAddDoc,
 }) => {
   const navigate = useNavigate();
   const [qrcodeValue, setQRCodeValue] = useState("");
@@ -54,7 +56,7 @@ const DataTable = ({
   const [error, setError] = useState(null);
   const [muiFilteredData, setMuiFilteredData] = useState([]);
   const { rowSelectionModel, setRowSelectionModel, tableSelectedRows, setTableSelectedRows } = useContext(DataTableContext);
-  const { openSnackbar } = useContext(SnackbarContext);
+  //   const { openSnackbar } = useContext(SnackbarContext);
 
   const resetSnakeBarMessages = () => {
     setError(null);
@@ -115,10 +117,17 @@ const DataTable = ({
       });
     });
   };
-
+  const ids = [
+    'gln_id',
+    'purchaseOrderId',
+    'gtinMainTableId',
+    'ssccTableId',
+    'customerListId'
+  ]
   const handleRowClick = (item) => {
     console.log(item)
-    if (uniqueId === "gln_id" || uniqueId === 'purchaseOrderId' || uniqueId === 'gtinMainTableId' || uniqueId === 'ssccTableId') {
+    // check if the uniqueId is in the ids array
+    if (ids.includes(uniqueId)) {
       handleRowClickInParent(item);
       return;
     }
@@ -441,12 +450,12 @@ const DataTable = ({
   };
 
 
-    const handleSendInvitation = () => {
+  const handleSendInvitation = () => {
     handleSendInvitationPopup();
   };
-  
-  
-  
+
+
+
 
 
   return (
@@ -509,11 +518,13 @@ const DataTable = ({
                 {NewUser && <button onClick={togglePopup} className="link">New User</button>}
                 {Permission && <button onClick={handleEdit}>Permission</button>}
                 {sendInvitation && <button onClick={handleSendInvitation}>Send Invitation</button>}
+                {AddDocBtn && <button onClick={handleAddDoc}>Add Document</button>}
                 {/* <button onClick={() => handlePdfExport(false)}
                             >Export to Pdf</button> */}
               </span>
             )}
             {AssignPickListBtn && <button onClick={handleUserListPopUp} >Assign Picklist</button>}
+
             {/* {backButton && <button onClick={() => { navigate(-1) }}>Go Back</button>} */}
           </span>
 
@@ -537,7 +548,7 @@ const DataTable = ({
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
           }
-          editMode="row"
+          editMode="none" // set to row if need to edit row
           processRowUpdate={processRowUpdate ? processRowUpdate : null}
           onProcessRowUpdateError={(params, error) => {
             console.log(error);
@@ -545,10 +556,14 @@ const DataTable = ({
           slots={{ toolbar: GridToolbar }}
           rows={filteredData}
           columns={
-            actionColumnVisibility !== false
-              ? idColumn.concat(columnsName.concat(actionColumn))
-              : idColumn.concat(columnsName)
+            uniqueId === "customerListId"
+              ? [...idColumn.slice(0, 1), ...actionColumn, ...idColumn.slice(1), ...columnsName]
+              : (actionColumnVisibility !== false
+                ? idColumn.concat(columnsName.concat(actionColumn))
+                : idColumn.concat(columnsName))
           }
+
+
           pageSize={30}
           rowsPerPageOptions={[30, 50, 100]}
           checkboxSelection={checkboxSelectionValue}
@@ -557,7 +572,7 @@ const DataTable = ({
 
           getRowId={(row) => row.no}
 
-        //   rowSelectionModel={rowSelectionModel}
+          //   rowSelectionModel={rowSelectionModel}
           onRowSelectionModelChange={(newRowSelectionModel) => {
             setRowSelectionModel(newRowSelectionModel); // Set the state with selected row ids
             console.log(newRowSelectionModel); // Logs the ids of selected rows
@@ -575,3 +590,5 @@ const DataTable = ({
 };
 
 export default DataTable;
+
+

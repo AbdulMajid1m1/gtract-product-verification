@@ -180,7 +180,7 @@ export const shipmentVerificationColumn = [
     width: 180,
     editable: false,
   },
-  
+
 
 
 
@@ -215,8 +215,54 @@ export const verifiedProductColumn = [
     width: 180,
     editable: false,
   },
-  
+
+
+
 
 
 
 ];
+
+
+export const ShipmentDocColumns = [
+  {
+    field: "document_id",
+    headerName: "Document Id",
+    width: 180,
+  },
+  // {
+  //   field: "shipment_id",
+  //   headerName: "Shipment Id",
+  //   width: 180,
+
+  // },
+  {
+    field: "document_type",
+    headerName: "Document type",
+    width: 180,
+  },
+
+
+  {
+    field: "document_url",
+    headerName: "Document",
+    width: 180,
+    renderCell: (params) => {
+      console.log("params");
+      console.log(params);
+
+      return (
+        <InsertDriveFileIcon
+          style={{
+            color: "primary",
+            width: "40px",
+            height: "40px",
+            cursor: "pointer",
+          }}
+        />
+      );
+    },
+
+
+  },
+]

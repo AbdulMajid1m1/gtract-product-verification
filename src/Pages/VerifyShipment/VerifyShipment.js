@@ -16,19 +16,19 @@ const VerifyShipment = () => {
     // when i click the image i want to open the popup
     const [isAddProductsOpen, setIsAddProductsOpen] = useState(false);
     const handleOpenAddProducts = () => {
-    setIsAddProductsOpen(true);
+        setIsAddProductsOpen(true);
     };
 
     // this is the popup code
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
-      setOpen(true);
+        setOpen(true);
     };
 
     const handleClose = () => {
-      setOpen(false);
+        setOpen(false);
     };
-  
+
 
 
     // I get the selected Row data in the session storage
@@ -91,11 +91,11 @@ const VerifyShipment = () => {
 
 
     // Function to handle saving card data to session storage
-//   const saveCardDataToSessionStorage = (item) => {
-//     sessionStorage.setItem("selectedCardData", JSON.stringify(item));
-//   };
+      const saveCardDataToSessionStorage = (item) => {
+        sessionStorage.setItem("selectedCardData", JSON.stringify(item));
+      };
 
-   
+
     return (
         <div>
 
@@ -170,40 +170,40 @@ const VerifyShipment = () => {
                                 return (
                                     <article key={index} className="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
                                         {/* <a href="#"> */}
-                                            <div className="relative h-56 flex items-end overflow-hidden rounded-xl">
-                                                <img className='' src={phpImagesBaseUrl + "/" + item?.front_image} alt="image"
-                                                    style={{
-                                                        objectFit: 'contain',
-                                                        height: '100%', margin: 'auto'
-                                                    }}
+                                        <div className="relative h-56 flex items-end overflow-hidden rounded-xl">
+                                            <img className='' src={phpImagesBaseUrl + "/" + item?.front_image} alt="image"
+                                                style={{
+                                                    objectFit: 'contain',
+                                                    height: '100%', margin: 'auto'
+                                                }}
 
-                                                />
-                                            </div>
+                                            />
+                                        </div>
 
-                                            <div className="mt-1 p-2 flex flex-col gap-1">
-                                                <div className='flex justify-between items-center'>
-                                                    <p className="text-sm font-semibold text-slate-700">{item?.productnameenglish}</p>
-                                                    <p className="mt-1 font-semibold text-sm text-slate-700">{item?.productnamearabic}</p>
-                                                </div>
-                                                <div className='flex justify-between'>
-                                                    {/* <p className="mt-1 font-semibold text-sm text-slate-700">{item?.model}</p> */}
-                                                    {/* <p className="mt-1 font-semibold text-sm text-slate-700">{item?.manufacturing_date}</p> */}
-                                                </div>
-                                                <div className='flex justify-between'>
-                                                    <p className="mt-1 font-semibold text-sm text-slate-700">{item?.barcode}</p>
-                                                    <p className="mt-1 font-semibold text-sm text-slate-700">{item?.unit}</p>
-                                                </div>
-                                                <p className="mt-1 font-semibold text-sm text-slate-700">{item?.BrandName}</p>
+                                        <div className="mt-1 p-2 flex flex-col gap-1">
+                                            <div className='flex justify-between items-center'>
+                                                <p className="text-sm font-semibold text-slate-700">{item?.productnameenglish}</p>
+                                                <p className="mt-1 font-semibold text-sm text-slate-700">{item?.productnamearabic}</p>
                                             </div>
-                                            <div className="mt-3 flex justify-between px-2">
-                                                <button
-                                                    onClick={() => {
-                                                        // saveCardDataToSessionStorage(item);
-                                                        // navigate('/shipment-docs/' + item?.id);
-                                                      }}
-                                                    className='h-auto w-auto px-4 py-1 text-sm bg-primary rounded-md text-white'>View Documents</button>
-                                                <p className="text-sm font-bold text-red-500">{item?.BrandNameAr}</p>
+                                            <div className='flex justify-between'>
+                                                {/* <p className="mt-1 font-semibold text-sm text-slate-700">{item?.model}</p> */}
+                                                {/* <p className="mt-1 font-semibold text-sm text-slate-700">{item?.manufacturing_date}</p> */}
                                             </div>
+                                            <div className='flex justify-between'>
+                                                <p className="mt-1 font-semibold text-sm text-slate-700">{item?.barcode}</p>
+                                                <p className="mt-1 font-semibold text-sm text-slate-700">{item?.unit}</p>
+                                            </div>
+                                            <p className="mt-1 font-semibold text-sm text-slate-700">{item?.BrandName}</p>
+                                        </div>
+                                        <div className="mt-3 flex justify-between px-2">
+                                            <button
+                                                onClick={() => {
+                                                    // saveCardDataToSessionStorage(item);
+                                                    // navigate('/shipment-docs/' + item?.id);
+                                                }}
+                                                className='h-auto w-auto px-4 py-1 text-sm bg-primary rounded-md text-white'>Verify Documents</button>
+                                            <p className="text-sm font-bold text-red-500">{item?.BrandNameAr}</p>
+                                        </div>
                                         {/* </a> */}
                                     </article>
                                 )
@@ -211,52 +211,52 @@ const VerifyShipment = () => {
                             }
 
 
-                <article className="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
-                    <a href="#">
-                        <div className="relative h-56 flex items-end overflow-hidden rounded-xl">
-                            <img 
-                                className=''
-                                onClick={handleOpenAddProducts}
-                                src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Hotel Photo" />
-                        </div>
+                            <article className="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
+                                <a href="#">
+                                    <div className="relative h-56 flex items-end overflow-hidden rounded-xl">
+                                        <img
+                                            className=''
+                                            onClick={handleOpenAddProducts}
+                                            src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Hotel Photo" />
+                                    </div>
 
-                        <div className="mt-1 p-2 flex flex-col gap-1">
-                            <div className='flex justify-between items-center'>
-                                <p className="text-sm font-semibold text-slate-700">Description English</p>
-                                <p className="mt-1 font-semibold text-sm text-slate-700">Description Arabic</p>
-                            </div>
-                            <div className='flex justify-between'>
-                                <p className="mt-1 font-semibold text-sm text-slate-700">Model</p>
-                                <p className="mt-1 font-semibold text-sm text-slate-700">Manufecturing Date</p>
-                            </div>
-                            <div className='flex justify-between'>
-                                <p className="mt-1 font-semibold text-sm text-slate-700">Serial Number</p>
-                                <p className="mt-1 font-semibold text-sm text-slate-700">Item Price</p>
-                            </div>
-                            <p className="mt-1 font-semibold text-sm text-slate-700">Item Code</p>
-                        </div>
-                        <div className="mt-3 flex justify-between px-2">
-                                <button
-                                    onClick={() => {
-                                        // saveCardDataToSessionStorage(item);
-                                        // navigate('/shipment-docs/' + item?.id);
-                                    }}
-                                className='h-auto w-auto px-4 py-1 text-sm bg-primary rounded-md text-white'>View Documents</button>
-                            <p className='h-auto w-auto px-4 py-1 text-sm bg-green-500 rounded-md text-white'>6281000000113</p>
-                        </div>
-                    </a>
-                </article>
-                    
+                                    <div className="mt-1 p-2 flex flex-col gap-1">
+                                        <div className='flex justify-between items-center'>
+                                            <p className="text-sm font-semibold text-slate-700">Description English</p>
+                                            <p className="mt-1 font-semibold text-sm text-slate-700">Description Arabic</p>
+                                        </div>
+                                        <div className='flex justify-between'>
+                                            <p className="mt-1 font-semibold text-sm text-slate-700">Model</p>
+                                            <p className="mt-1 font-semibold text-sm text-slate-700">Manufecturing Date</p>
+                                        </div>
+                                        <div className='flex justify-between'>
+                                            <p className="mt-1 font-semibold text-sm text-slate-700">Serial Number</p>
+                                            <p className="mt-1 font-semibold text-sm text-slate-700">Item Price</p>
+                                        </div>
+                                        <p className="mt-1 font-semibold text-sm text-slate-700">Item Code</p>
+                                    </div>
+                                    <div className="mt-3 flex justify-between px-2">
+                                        <button
+                                            onClick={() => {
+                                                // saveCardDataToSessionStorage(item);
+                                                // navigate('/shipment-docs/' + item?.id);
+                                            }}
+                                            className='h-auto w-auto px-4 py-1 text-sm bg-primary rounded-md text-white'>View Documents</button>
+                                        <p className='h-auto w-auto px-4 py-1 text-sm bg-green-500 rounded-md text-white'>6281000000113</p>
+                                    </div>
+                                </a>
+                            </article>
+
                             {isAddProductsOpen && ( // Conditionally render AddProducts component
                                 <div className="flex gap-3 justify-end">
-                                <AddProducts
-                                    handleClose={() => setIsAddProductsOpen(false)}
-                                    handleOpen={handleOpenAddProducts}
-                                    open={isAddProductsOpen}
-                                />
+                                    <AddProducts
+                                        handleClose={() => setIsAddProductsOpen(false)}
+                                        handleOpen={handleOpenAddProducts}
+                                        open={isAddProductsOpen}
+                                    />
                                 </div>
                             )}
-                       
+
                         </div>
                     </section>
 
