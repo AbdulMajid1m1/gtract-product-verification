@@ -96,10 +96,6 @@ const InventoryItems = () => {
 
   return (
     <div>
-      {/* <SideBar /> */}
-
-      {message && <CustomSnakebar message={message} severity="success" onClose={resetSnakeBarMessages} />}
-      {error && <CustomSnakebar message={error} severity="error" onClose={resetSnakeBarMessages} />}
 
 
       <div className="p-3 h-full sm:ml-72">
