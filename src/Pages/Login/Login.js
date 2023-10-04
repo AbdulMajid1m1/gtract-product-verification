@@ -36,7 +36,7 @@ const Login = () => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err.response.data.message || 'Something went wrong!',
+          text: 'Something went wrong!',
           footer: '<a href="">Please Put the Correct Admin Email Password</a>'
         })
       })
@@ -93,7 +93,7 @@ const Login = () => {
                     <label htmlFor='password'>Enter Your Password</label>
                     <input
                       id='password'
-                      type="text"
+                      type="password"
                       name="password"
                       placeholder="Enter Your Password"
                       className="border outline-blue-700 rounded-md w-full h-12 px-4"

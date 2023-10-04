@@ -1,15 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { ProductsDataColumn, shipmentVerificationColumn } from "../../utils/datatablesource";
+import React, { useContext, useEffect, useState } from "react";
+import { shipmentVerificationColumn } from "../../utils/datatablesource";
 
 import { useNavigate } from "react-router-dom";
-// import VisibilityIcon from "@mui/icons-material/Visibility";
-// import EditIcon from "@mui/icons-material/Edit";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import LinkIcon from '@mui/icons-material/Link';
+import VerifiedIcon from '@mui/icons-material/Verified';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import newRequest from "../../utils/userRequest";
 import DataTable from "../../Components/Datatable/Datatable";
 import { SnackbarContext } from "../../Contexts/SnackbarContext";
-import { CurrentUserContext } from "../../Contexts/CurrentUserContext";
 
 
 const ShipmentVerification = () => {
@@ -20,10 +17,8 @@ const ShipmentVerification = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]); // for the map markers
-  const { currentUser } = useContext(CurrentUserContext);
   const navigate = useNavigate()
-  console.log(currentUser)
-
+ 
   const [error, setError] = useState(false);
   const [message, setMessage] = useState("");
   const resetSnakeBarMessages = () => {
@@ -52,6 +47,15 @@ const ShipmentVerification = () => {
   }, []); // Empty array dependency ensures this useEffect runs once on component mount
 
 
+  const handleView = (row) => {
+    navigate('/verify-shipment')
+  }
+
+  const handleEdit = (row) => {
+    navigate('/verify-shipment')
+  }
+
+
 
   return (
     <div>
@@ -71,26 +75,26 @@ const ShipmentVerification = () => {
               secondaryColor="secondary"
 
 
-              // dropDownOptions={[
-              //   {
-              //     label: "View",
-              //     icon: (
-              //       <VisibilityIcon
-              //         fontSize="small"
-              //         color="action"
-              //         style={{ color: "rgb(37 99 235)" }}
-              //       />
-              //     ),
-              //     action: handleView,
-              //   },
-              //   {
-              //     label: "Edit",
-              //     icon: <EditIcon fontSize="small" color="action" style={{ color: "rgb(37 99 235)" }} />
-              //     ,
-              //     action: handleEdit
+              dropDownOptions={[
+                {
+                  label: "Verify Shipment",
+                  icon: (
+                    <VerifiedIcon
+                      fontSize="small"
+                      color="action"
+                      style={{ color: "rgb(37 99 235)" }}
+                    />
+                  ),
+                  action: handleView,
+                },
+                {
+                  label: "Approve Shipment",
+                  icon: <CheckCircleIcon fontSize="small" color="action" style={{ color: "rgb(37 99 235)" }} />
+                  ,
+                  action: handleEdit
 
-              //   },
-              // ]}
+                },
+              ]}
               uniqueId="shipmentVerification"
 
             />
