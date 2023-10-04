@@ -277,7 +277,7 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
           </button>
 
           <button
-            className={`p-4 rounded ${activeTab === 'company-information' ? 'bg-primary text-white' : 'bg-white text-primary'
+            className={`p-4 rounded truncate ${activeTab === 'company-information' ? 'bg-primary text-white' : 'bg-white text-primary'
               } shadow-md flex items-center justify-center`}
             onClick={() => handleTabClick('company-information')}
           >
