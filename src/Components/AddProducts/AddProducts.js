@@ -38,6 +38,10 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
   const { openSnackbar } = useContext(SnackbarContext);
 
   console.log(barcode);
+
+    //i want to save this barcode in sesstion storage
+    sessionStorage.setItem('barcode', JSON.stringify(barcode?.barcode))
+
     // // this is the popup code
     // const [open, setOpen] = useState(false);
     // const handleOpen = () => {
