@@ -48,6 +48,9 @@ const ShipmentVerification = () => {
 
 
   const handleView = (row) => {
+    console.log(row)
+    // i want to save the row data in sesstion storage
+    sessionStorage.setItem('shipmentVerification', JSON.stringify(row))
     navigate('/verify-shipment')
   }
 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-// import newRequest from '../../utils/userRequest';
+import newRequest from '../../utils/userRequest';
 import { RiseLoader } from 'react-spinners';
 // import { SnackbarContext } from '../../Contexts/SnackbarContext';
 import gs1logo from "../../Images/gs1.png";
@@ -10,14 +10,39 @@ import AddProducts from '../../Components/AddProducts/AddProducts';
 
 const VerifyShipment = () => {
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [cardData, setCardData] = useState([]);
+    const [clickedCardData, setClickedCardData] = useState(null);
+
 
     // when i click the image i want to open the popup
-    const [isAddProductsOpen, setIsAddProductsOpen] = useState(false);
-    const handleOpenAddProducts = () => {
-        setIsAddProductsOpen(true);
-    };
+    // const [isAddProductsOpen, setIsAddProductsOpen] = useState(false);
+    // const handleOpenAddProducts = () => {
+    //     setIsAddProductsOpen(true);
+    // };
+
+     // Create an array of boolean states, one for each card
+     const [isAddProductsOpenArray, setIsAddProductsOpenArray] = useState([]);
+
+     // Initialize the state array based on the number of cards
+     useEffect(() => {
+         setIsAddProductsOpenArray(new Array(cardData.length).fill(false));
+     }, [cardData]);
+ 
+     // Function to open the popup for a specific card
+     const handleOpenAddProductsForItem = (index) => {
+         const updatedArray = [...isAddProductsOpenArray];
+         updatedArray[index] = true;
+         setClickedCardData(cardData[index]);
+         setIsAddProductsOpenArray(updatedArray);
+     };
+ 
+     // Function to close the popup for a specific card
+     const handleCloseAddProductsForItem = (index) => {
+         const updatedArray = [...isAddProductsOpenArray];
+         updatedArray[index] = false;
+         setIsAddProductsOpenArray(updatedArray);
+     };
 
     // this is the popup code
     const [open, setOpen] = useState(false);
@@ -32,68 +57,56 @@ const VerifyShipment = () => {
 
 
     // I get the selected Row data in the session storage
-    // const getRowData = sessionStorage.getItem("customerRowData");
-    // const parsedRowData = JSON.parse(getRowData);
+    const getRowData = sessionStorage.getItem("shipmentVerification");
+    const parsedRowData = JSON.parse(getRowData);
     // console.log(parsedRowData);
 
-
-    // get the session data
-    // const parsedVendorData = JSON.parse(sessionStorage.getItem("shipmentRequest"));
-    // console.log(parsedVendorData)
-    // how i can get the shipment id from the session data
-
-    // let shipmentId = parsedVendorData?.shipment_id
+    let shipmentId = parsedRowData?.shipment_id
 
 
-    // useEffect(() => {
-    //     const fetcShipmentProducts = async () => {
-    //         try {
-    //             const response = await newRequest.get(`/getShipmentProductByShipmentId?shipmentId=${shipmentId}`)
+    useEffect(() => {
+        const fetcShipmentProducts = async () => {
+            try {
+                const response = await newRequest.get(`/getShipmentProductByShipmentId?shipmentId=${shipmentId}`)
 
-    //             console.log(response?.data);
-    //             setCardData(response?.data ?? [])
-    //             setIsLoading(false);
-    //         } catch (error) {
-    //             console.log(error);
-    //             setIsLoading(false);
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Oops...',
-    //                 text: error?.response?.data?.message ?? 'Something went wrong!',
-    //             })
-    //             setCardData([]);
+                console.log(response?.data);
+                setCardData(response?.data ?? [])
+                setIsLoading(false);
+            } catch (error) {
+                console.log(error);
+                setIsLoading(false);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error?.response?.data?.message ?? 'Something went wrong!',
+                })
+                setCardData([]);
 
-    //         }
-    //     }
-    //     fetcShipmentProducts();
-    // }, [])
-
-    // const handleRefetch = async () => {
-    //     setIsLoading(true);
-    //     try {
-    //         const response = await newRequest.get(`/getShipmentProductByShipmentId?shipmentId=${shipmentId}`)
-
-    //         console.log(response?.data);
-    //         setCardData(response?.data ?? [])
-    //         setIsLoading(false);
-    //     } catch (error) {
-    //         console.log(error);
-    //         setIsLoading(false);
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Oops...',
-    //             text: error?.response?.data?.message ?? 'Something went wrong!',
-    //         })
-    //         setCardData([]);
-
-    //     }
-    // }
+            }
+        }
+        fetcShipmentProducts();
+    }, [])
 
 
-    // Function to handle saving card data to session storage
-      const saveCardDataToSessionStorage = (item) => {
-        sessionStorage.setItem("selectedCardData", JSON.stringify(item));
-      };
+    const handleRefetch = async () => {
+        try {
+            const response = await newRequest.get(`/getShipmentProductByShipmentId?shipmentId=${shipmentId}`)
+
+            console.log(response?.data);
+            setCardData(response?.data ?? [])
+            setIsLoading(false);
+        } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: error?.response?.data?.message ?? 'Something went wrong!',
+            })
+            setCardData([]);
+
+        }
+    }
 
 
     return (
@@ -131,35 +144,24 @@ const VerifyShipment = () => {
                                 <div className='flex flex-col w-full gap-2'>
                                     <div className='flex justify-between -mt-1'>
                                         <div className='w-[50%]'>
-                                            <p className='font-semibold'>Customer Name</p>
+                                            <p className='font-semibold'>Shipment Id</p>
                                         </div>
                                         <div className='flex w-[50%] gap-2'>
                                             <p>:</p>
-                                            <p>03</p>
-                                            {/* <p className='font-semibold'>{parsedRowData?.company_name_eng}</p> */}
+                                            <p className='font-semibold'>{parsedRowData?.shipment_id}</p>
                                         </div>
                                     </div>
                                     <div className='flex justify-between -mt-1'>
                                         <div className='w-[50%]'>
-                                            <p className='font-semibold'>Customer No</p>
+                                            <p className='font-semibold'>Customer Id</p>
                                         </div>
                                         <div className='flex w-[50%] gap-2'>
                                             <p>:</p>
-                                            <p>6</p>
-                                            {/* <p className='font-semibold'>{parsedRowData?.no}</p> */}
+                                            <p className='font-semibold'>{parsedRowData?.customer_id}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {/* Next Button */}
-                            {/* <div className='flex gap-3 justify-end'>
-                                <AddProducts title={"Add Product"} 
-                                    handleClose={handleClose}
-                                    handleOpen={handleOpen}
-                                    open={open}
-                                    // handleRefetch={handleRefetch}
-                                    />
-                            </div> */}
                         </div>
                     </div>
 
@@ -167,11 +169,16 @@ const VerifyShipment = () => {
                     <section className="py-1 bg-gray-100">
                         <div className="mx-auto grid max-w-6xl  grid-cols-1 gap-5 p-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
                             {cardData?.map((item, index) => {
+
                                 return (
                                     <article key={index} className="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
                                         {/* <a href="#"> */}
                                         <div className="relative h-56 flex items-end overflow-hidden rounded-xl">
-                                            <img className='' src={phpImagesBaseUrl + "/" + item?.front_image} alt="image"
+                                            <img 
+                                                className='' 
+                                                src={phpImagesBaseUrl + "/" + item?.front_image} alt="image"
+                                                // onClick={handleOpenAddProducts}
+                                                onClick={() => handleOpenAddProductsForItem(index)}
                                                 style={{
                                                     objectFit: 'contain',
                                                     height: '100%', margin: 'auto'
@@ -198,64 +205,43 @@ const VerifyShipment = () => {
                                         <div className="mt-3 flex justify-between px-2">
                                             <button
                                                 onClick={() => {
-                                                    // saveCardDataToSessionStorage(item);
-                                                    // navigate('/shipment-docs/' + item?.id);
+                                                    navigate('/shipment-docs/' + item?.id);
                                                 }}
                                                 className='h-auto w-auto px-4 py-1 text-sm bg-primary rounded-md text-white'>Verify Documents</button>
-                                            <p className="text-sm font-bold text-red-500">{item?.BrandNameAr}</p>
+                                                <p className={`text-sm font-bold ${
+                                                    item?.is_verified === true ? 'bg-green-500' : 
+                                                    item?.is_verified === false ? 'bg-red-500' : ''
+                                                } text-white py-1 px-2 rounded-md`}
+                                                >{item?.barcode}</p>
                                         </div>
                                         {/* </a> */}
+                                        
+                                        {/* When User Click on image i show the Popup */}
+                                        {/* {isAddProductsOpen && (
+                                            <div className="flex gap-3 justify-end">
+                                                <AddProducts
+                                                    handleClose={() => setIsAddProductsOpen(false)}
+                                                    handleOpen={handleOpenAddProducts}
+                                                    open={isAddProductsOpen}
+                                                    barcode={item?.barcode}
+                                                />
+                                            </div>
+                                        )} */}
+                                        {isAddProductsOpenArray[index] && (
+                                            <div className="flex gap-3 justify-end">
+                                                <AddProducts
+                                                    handleClose={() => handleCloseAddProductsForItem(index)}
+                                                    handleOpen={() => handleOpenAddProductsForItem(index)}
+                                                    open={isAddProductsOpenArray[index]}
+                                                    barcode={clickedCardData}
+                                                    handleRefetch={handleRefetch}
+                                                />
+                                            </div>
+                                        )}
                                     </article>
                                 )
                             })
                             }
-
-
-                            <article className="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
-                                <a href="#">
-                                    <div className="relative h-56 flex items-end overflow-hidden rounded-xl">
-                                        <img
-                                            className=''
-                                            onClick={handleOpenAddProducts}
-                                            src="https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Hotel Photo" />
-                                    </div>
-
-                                    <div className="mt-1 p-2 flex flex-col gap-1">
-                                        <div className='flex justify-between items-center'>
-                                            <p className="text-sm font-semibold text-slate-700">Description English</p>
-                                            <p className="mt-1 font-semibold text-sm text-slate-700">Description Arabic</p>
-                                        </div>
-                                        <div className='flex justify-between'>
-                                            <p className="mt-1 font-semibold text-sm text-slate-700">Model</p>
-                                            <p className="mt-1 font-semibold text-sm text-slate-700">Manufecturing Date</p>
-                                        </div>
-                                        <div className='flex justify-between'>
-                                            <p className="mt-1 font-semibold text-sm text-slate-700">Serial Number</p>
-                                            <p className="mt-1 font-semibold text-sm text-slate-700">Item Price</p>
-                                        </div>
-                                        <p className="mt-1 font-semibold text-sm text-slate-700">Item Code</p>
-                                    </div>
-                                    <div className="mt-3 flex justify-between px-2">
-                                        <button
-                                            onClick={() => {
-                                                // saveCardDataToSessionStorage(item);
-                                                // navigate('/shipment-docs/' + item?.id);
-                                            }}
-                                            className='h-auto w-auto px-4 py-1 text-sm bg-primary rounded-md text-white'>View Documents</button>
-                                        <p className='h-auto w-auto px-4 py-1 text-sm bg-green-500 rounded-md text-white'>6281000000113</p>
-                                    </div>
-                                </a>
-                            </article>
-
-                            {isAddProductsOpen && ( // Conditionally render AddProducts component
-                                <div className="flex gap-3 justify-end">
-                                    <AddProducts
-                                        handleClose={() => setIsAddProductsOpen(false)}
-                                        handleOpen={handleOpenAddProducts}
-                                        open={isAddProductsOpen}
-                                    />
-                                </div>
-                            )}
 
                         </div>
                     </section>
