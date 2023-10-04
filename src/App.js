@@ -9,6 +9,7 @@ import { CurrentUserProvider } from "./Contexts/CurrentUserContext";
 import { SnackbarProvider } from "./Contexts/SnackbarContext";
 import ShipmentVerification from "./Pages/ShipmentVerification/ShipmentVerification";
 import VerifiedProduct from "./Pages/VerifiedProduct/VerifiedProduct";
+import VerifyShipment from "./Pages/VerifyShipment/VerifyShipment";
 
 const App = () => {
   const MainLayout = ({ children }) => {
@@ -38,6 +39,7 @@ const App = () => {
                           <Route path="/dashboard" element={<Dashboard />} />
                           <Route path="/shipment-verification" element={<ShipmentVerification />} />
                           <Route path="/verified-product" element={<VerifiedProduct />} />
+                          <Route path="/verify-shipment" element={<VerifyShipment />} />
                           {/* <Route path="/inventory-items" element={<InventoryItems />} /> */}
                         </Routes>
                       </MainLayout>

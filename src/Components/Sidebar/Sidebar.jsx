@@ -93,7 +93,7 @@ const SideBar = () => {
               </svg>
             </button>
             <p className="sm:text-2xl sm:py-0 py-2 sm:px-0 px-3 text-white font-medium">
-              Gtrack Retailer Portal
+              Product Verification Portal
             </p>
           </div>
           <div
