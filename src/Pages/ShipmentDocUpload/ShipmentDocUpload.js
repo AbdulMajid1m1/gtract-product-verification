@@ -28,7 +28,7 @@ const ShipmentDocUpload = () => {
      const getRowData = sessionStorage.getItem("shipmentVerification");
      const parsedRowData = JSON.parse(getRowData);
     //  console.log(parsedRowData);
-     let customerId = parsedRowData?.customer_id
+     let vendorId = parsedRowData?.vendor_id;
 
 
     // take product id from url
@@ -50,12 +50,12 @@ const ShipmentDocUpload = () => {
     useEffect(() => {
         refectDocList();
 
-          // customer id api
+        // Vendor_id api to Get the Company Name
         const fetchCustomerId = async () => {
            try {
-                const response = await newRequest.get(`/getGs1userById?id=${customerId}`)
+                const response = await newRequest.get(`/getVendorsById?id=${vendorId}`)
                 // console.log(response?.data);
-                setShowCustomerId(response?.data ?? [])
+                setShowCustomerId(response?.data[0] ?? [])
                 
             } catch (error) {
                 console.log(error);
@@ -157,6 +157,11 @@ const ShipmentDocUpload = () => {
         console.log(row)
     }
 
+    const handleValidateAllDoc = async () => {
+        console.log('validate all doc')
+    }
+
+
     return (
         <div>
             <div className="p-3 h-full sm:ml-72">
@@ -174,7 +179,7 @@ const ShipmentDocUpload = () => {
                         </div>
                     </div>
                         <div className='sm:text-2xl text-sm font-semibold text-red-600'>
-                            <p>{showCustomerId?.company_name_eng}</p>
+                            <p>Company: {showCustomerId?.company_name_English}</p>
                         </div>
                     </div>
 
@@ -194,7 +199,7 @@ const ShipmentDocUpload = () => {
                         secondaryColor="secondary"
                         loading={isLoading}
                         AddDocBtn={true}
-                        handleValidateAllDoc={true}
+                        handleValidateAllDoc={handleValidateAllDoc}
                         handleAddDoc={handleAddDoc}
                         uniqueId="shipmentDocUploadId"
                         dropDownOptions={[

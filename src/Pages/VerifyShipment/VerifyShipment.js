@@ -63,7 +63,7 @@ const VerifyShipment = () => {
     console.log(parsedRowData);
 
     let shipmentId = parsedRowData?.shipment_id
-    let customerId = parsedRowData?.customer_id
+    let vendorId = parsedRowData?.vendor_id
 
     useEffect(() => {
         const fetcShipmentProducts = async () => {
@@ -89,9 +89,10 @@ const VerifyShipment = () => {
         // customer id api
         const fetchCustomerId = async () => {
             try {
-                const response = await newRequest.get(`/getGs1userById?id=${customerId}`)
-                // console.log(response?.data);
-                setShowCustomerId(response?.data ?? [])
+                // const response = await newRequest.get(`/getGs1userById?id=${customerId}`)
+                const response = await newRequest.get(`/getVendorsById?id=${vendorId}`)
+                console.log(response?.data[0]);
+                setShowCustomerId(response?.data[0] ?? [])
                 
             } catch (error) {
                 console.log(error);
@@ -185,7 +186,7 @@ const VerifyShipment = () => {
                             </div>
 
                             <div className='sm:text-2xl text-sm font-semibold text-red-600'>
-                                <p>{showCustomerId?.company_name_eng}</p>
+                                <p>Company: {showCustomerId?.company_name_English}</p>
                             </div>
                         </div>
                     </div>
