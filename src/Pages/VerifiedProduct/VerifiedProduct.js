@@ -6,6 +6,7 @@ import newRequest from "../../utils/userRequest";
 import DataTable from "../../Components/Datatable/Datatable";
 import { SnackbarContext } from "../../Contexts/SnackbarContext";
 import { CurrentUserContext } from "../../Contexts/CurrentUserContext";
+import Swal from "sweetalert2";
 
 
 const VerifiedProduct = () => {
@@ -62,16 +63,37 @@ const VerifiedProduct = () => {
     getAllShipmentsProducts();
   }, []);
 
-  const handleRowClickInParent = (item) => {
+  const handleRowClickInParent = async (item) => {
 
     if (item.length === 0) {
       setFilteredData(secondGridData)
       return
     }
-    const filteredData = secondGridData.filter((singleItem) => {
-      return Number(singleItem?.shipment_id) == Number(item[0]?.shipment_id)
-    })
-    setFilteredData(filteredData)
+    // const filteredData = secondGridData.filter((singleItem) => {
+    //   return Number(singleItem?.shipment_id) == Number(item[0]?.shipment_id)
+    // })
+
+    // call api
+    setIsShipmentProductDataLoading(true)
+    try {
+      const res = await newRequest.get("/getShipmentProductByShipmentId?shipmentId=" + item[0]?.shipment_id)
+      const filteredData = res?.data ?? []
+      setFilteredData(filteredData)
+    }
+    catch (error) {
+      console.log(error)
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error?.response?.data?.message ?? "Something went wrong",
+        timer: 3000,
+        timerProgressBar: true,
+
+      })
+    }
+    finally {
+      setIsShipmentProductDataLoading(false)
+    }
   }
 
   return (
