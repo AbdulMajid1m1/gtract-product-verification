@@ -235,7 +235,7 @@ const VerifyShipment = () => {
                                                 >{item?.barcode}</p>
                                         </div>
                                         {/* </a> */}
-                                        
+                                         
                                         {/* When User Click on image i show the Popup */}
                                         {/* {isAddProductsOpen && (
                                             <div className="flex gap-3 justify-end">
