@@ -243,6 +243,28 @@ export const ShipmentDocColumns = [
   },
 
 
+  // {
+  //   field: "document_url",
+  //   headerName: "Document",
+  //   width: 180,
+  //   renderCell: (params) => {
+  //     console.log("params");
+  //     console.log(params);
+
+  //     return (
+  //       <InsertDriveFileIcon
+  //         style={{
+  //           color: "primary",
+  //           width: "40px",
+  //           height: "40px",
+  //           cursor: "pointer",
+  //         }}
+  //       />
+  //     );
+  //   },
+
+
+  // },
   {
     field: "document_url",
     headerName: "Document",
@@ -250,11 +272,17 @@ export const ShipmentDocColumns = [
     renderCell: (params) => {
       console.log("params");
       console.log(params);
-
+  
+      // Assuming 'params.row.is_verified' contains the true/false value
+      const isVerified = params.row.is_verified;
+  
+      // Define the color based on the 'isVerified' value
+      const iconColor = isVerified ? "green" : "red";
+  
       return (
         <InsertDriveFileIcon
           style={{
-            color: "primary",
+            color: iconColor,
             width: "40px",
             height: "40px",
             cursor: "pointer",
@@ -262,17 +290,31 @@ export const ShipmentDocColumns = [
         />
       );
     },
-
-
   },
-
-
-
+  
   {
-    field: "status",
-    headerName: "Status",
-    width: 180,
-  },
+    field: "is_verified",
+    headerName: "Is Verified",
+    width: 150,
+    editable: false,  // Making this non-editable as it's a custom rendered cell
+    renderCell: (params) => (
+      <Button
+        variant="contained"
+        style={{
+          borderRadius: '50px',  // Rounded border
+          padding: '2px 12px',
+          color: 'white',  // White text color
+          fontSize: '0.8rem',
+          backgroundColor: params.value ? 'green' : 'red',  // Green for verified, Red for not verified
+        }}
+      >
+        {params.value ? 'Verified' : 'Not Verified'}
+      </Button>
+    ),
+  }
+
+
+  
 ]
 
 export const shipmentProductsColumns = [

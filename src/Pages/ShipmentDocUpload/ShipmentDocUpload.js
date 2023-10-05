@@ -155,10 +155,67 @@ const ShipmentDocUpload = () => {
 
     const handleValidate = async (row) => {
         console.log(row)
+        
+        try {
+            const response = await newRequest.put('/updateDocumentVerificationStatus', {
+                document_id: row.document_id,
+                is_verified: true,
+            });
+
+            Swal.fire({
+                title: 'Success!',
+                text: response.data.message,
+                icon: 'success',
+                confirmButtonText: 'Okay',
+                timer: 2000,
+                timerProgressBar: true,
+            });
+
+            // for approve, refresh the datagrid to show the updated status
+            refectDocList();
+
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error?.response?.data?.message || 'An error occurred while approving shipment',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        }   
     }
 
+
+
     const handleValidateAllDoc = async () => {
-        console.log('validate all doc')
+        console.log("validate all doc")
+
+        try {
+            const response = await newRequest.put('/updateAllDocumentsStatusForProduct', {
+                product_id: productId,
+                is_verified: true,
+            });
+
+            Swal.fire({
+                title: 'Success!',
+                text: response.data.message,
+                icon: 'success',
+                confirmButtonText: 'Okay',
+                timer: 2000,
+                timerProgressBar: true,
+            });
+
+            // for approve, refresh the datagrid to show the updated status
+            refectDocList();
+
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error?.response?.data?.message || 'An error occurred while approving shipment',
+                icon: 'error',
+                confirmButtonText: 'Okay'
+            });
+        }
+
     }
 
 
@@ -199,6 +256,7 @@ const ShipmentDocUpload = () => {
                         secondaryColor="secondary"
                         loading={isLoading}
                         AddDocBtn={true}
+                        handleValidateDoc={true}
                         handleValidateAllDoc={handleValidateAllDoc}
                         handleAddDoc={handleAddDoc}
                         uniqueId="shipmentDocUploadId"

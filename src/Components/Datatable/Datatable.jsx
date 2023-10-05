@@ -43,6 +43,7 @@ const DataTable = ({
   handleSendInvitationPopup,
   AddDocBtn,
   handleAddDoc,
+  handleValidateDoc,
   handleValidateAllDoc,
 }) => {
   const navigate = useNavigate();
@@ -520,7 +521,7 @@ const DataTable = ({
                 {NewUser && <button onClick={togglePopup} className="link">New User</button>}
                 {Permission && <button onClick={handleEdit}>Permission</button>}
                 {sendInvitation && <button onClick={handleSendInvitation}>Send Invitation</button>}
-                {handleValidateAllDoc && <button onClick={handleValidateAllDoc}>Validate All</button>}
+                {handleValidateDoc && <button onClick={handleValidateAllDoc}>Validate All</button>}
                 {AddDocBtn && <button onClick={handleAddDoc}>Add Document</button>}
                 {/* <button onClick={() => handlePdfExport(false)}
                             >Export to Pdf</button> */}

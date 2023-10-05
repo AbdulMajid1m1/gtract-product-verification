@@ -9,6 +9,7 @@ import profile from '../../Images/profile.png'
 import shipmentverificationicon from '../../Images/shipmentverificationIcon.png'
 import  verifiedproducticon  from "../../Images/verifedproduct.png";
 import backarrow from "../../Images/backarrow.png";
+import gtinjourney from "../../Images/gtinjourney.png";
 import logout from "../../Images/logout.png"
 
 const SideBar = () => {
@@ -194,6 +195,23 @@ const SideBar = () => {
               alt=""
             />
             <p className="sidebar-text">Verified Product</p>
+          </div>
+
+
+          <div
+            className={`main-images-container ${selectedItem === '/gtin-journey' ? 'selected-item' : ''}`}
+            onClick={() => handleItemClick('/gtin-journey')}
+            onContextMenu={(event) =>
+              handleContextMenu(event, '/gtin-journey')
+            }
+
+          >
+            <img
+              src={gtinjourney}
+              className="main-inside-image bg-white rounded-full"
+              alt=""
+            />
+            <p className="sidebar-text">Gtin Journey</p>
           </div>
 
           <div className="main-images-container" onClick={() => navigate("/")}>

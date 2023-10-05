@@ -11,6 +11,7 @@ import ShipmentVerification from "./Pages/ShipmentVerification/ShipmentVerificat
 import VerifiedProduct from "./Pages/VerifiedProduct/VerifiedProduct";
 import VerifyShipment from "./Pages/VerifyShipment/VerifyShipment";
 import ShipmentDocUpload from "./Pages/ShipmentDocUpload/ShipmentDocUpload";
+import GtinJourney from "./Pages/GtinJourney/GtinJourney";
 
 const App = () => {
   const MainLayout = ({ children }) => {
@@ -31,6 +32,7 @@ const App = () => {
               <BrowserRouter>
                 <Routes>
                   <Route path="/" element={<Login />} />
+                  <Route path="/gtin-journey" element={<GtinJourney />} /> 
 
                   <Route
                     path="/*"
