@@ -12,6 +12,7 @@ const VerifyShipment = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [cardData, setCardData] = useState([]);
+    const [showCustomerId, setShowCustomerId] = useState(false);
     const [clickedCardData, setClickedCardData] = useState(null);
 
 
@@ -59,10 +60,10 @@ const VerifyShipment = () => {
     // I get the selected Row data in the session storage
     const getRowData = sessionStorage.getItem("shipmentVerification");
     const parsedRowData = JSON.parse(getRowData);
-    // console.log(parsedRowData);
+    console.log(parsedRowData);
 
     let shipmentId = parsedRowData?.shipment_id
-
+    let customerId = parsedRowData?.customer_id
 
     useEffect(() => {
         const fetcShipmentProducts = async () => {
@@ -84,7 +85,22 @@ const VerifyShipment = () => {
 
             }
         }
+
+        // customer id api
+        const fetchCustomerId = async () => {
+            try {
+                const response = await newRequest.get(`/getGs1userById?id=${customerId}`)
+                // console.log(response?.data);
+                setShowCustomerId(response?.data ?? [])
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        
         fetcShipmentProducts();
+        fetchCustomerId();
     }, [])
 
 
@@ -161,6 +177,10 @@ const VerifyShipment = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className='sm:text-2xl text-sm font-semibold text-red-600'>
+                                <p>{showCustomerId?.company_name_eng}</p>
                             </div>
                         </div>
                     </div>
