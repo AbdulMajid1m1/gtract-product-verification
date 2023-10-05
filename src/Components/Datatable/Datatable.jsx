@@ -43,6 +43,7 @@ const DataTable = ({
   handleSendInvitationPopup,
   AddDocBtn,
   handleAddDoc,
+  handleValidateAllDoc,
 }) => {
   const navigate = useNavigate();
   const [qrcodeValue, setQRCodeValue] = useState("");
@@ -519,6 +520,7 @@ const DataTable = ({
                 {NewUser && <button onClick={togglePopup} className="link">New User</button>}
                 {Permission && <button onClick={handleEdit}>Permission</button>}
                 {sendInvitation && <button onClick={handleSendInvitation}>Send Invitation</button>}
+                {handleValidateAllDoc && <button onClick={handleValidateAllDoc}>Validate All</button>}
                 {AddDocBtn && <button onClick={handleAddDoc}>Add Document</button>}
                 {/* <button onClick={() => handlePdfExport(false)}
                             >Export to Pdf</button> */}

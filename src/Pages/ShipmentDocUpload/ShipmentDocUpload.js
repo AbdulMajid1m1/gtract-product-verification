@@ -5,6 +5,7 @@ import { ShipmentDocColumns } from '../../utils/datatablesource'
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SnackbarContext } from '../../Contexts/SnackbarContext';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import newRequest from '../../utils/userRequest'
 
@@ -152,6 +153,10 @@ const ShipmentDocUpload = () => {
     }
 
 
+    const handleValidate = async (row) => {
+        console.log(row)
+    }
+
     return (
         <div>
             <div className="p-3 h-full sm:ml-72">
@@ -189,6 +194,7 @@ const ShipmentDocUpload = () => {
                         secondaryColor="secondary"
                         loading={isLoading}
                         AddDocBtn={true}
+                        handleValidateAllDoc={true}
                         handleAddDoc={handleAddDoc}
                         uniqueId="shipmentDocUploadId"
                         dropDownOptions={[
@@ -199,12 +205,12 @@ const ShipmentDocUpload = () => {
                                 ,
                                 action: handleDownload,
                             },
-                            // {
-                            //     label: "View",
-                            //     icon: <VisibilityIcon fontSize="small" style={{ color: "rgb(37 99 235)" }} />
-                            //     ,
-                            //     action: handleView,
-                            // },
+                            {
+                                label: "Validate",
+                                icon: <VerifiedUserIcon fontSize="small" style={{ color: "rgb(37 99 235)" }} />
+                                ,
+                                action: handleValidate,
+                            },
                             {
                                 label: "Delete",
                                 icon: <DeleteIcon fontSize="small" style={{ color: '#FF0032' }} />

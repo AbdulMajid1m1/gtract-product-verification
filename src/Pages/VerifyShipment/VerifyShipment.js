@@ -125,6 +125,11 @@ const VerifyShipment = () => {
     }
 
 
+     // Function to handle saving card data to session storage
+    const saveCardDataToSessionStorage = (item) => {
+        sessionStorage.setItem("selectedCardData", JSON.stringify(item));
+    };
+
     return (
         <div>
 
@@ -225,6 +230,7 @@ const VerifyShipment = () => {
                                         <div className="mt-3 flex justify-between px-2">
                                             <button
                                                 onClick={() => {
+                                                    saveCardDataToSessionStorage(item);
                                                     navigate('/shipment-docs/' + item?.id);
                                                 }}
                                                 className='h-auto w-auto px-4 py-1 text-sm bg-primary rounded-md text-white'>Verify Documents</button>

@@ -265,6 +265,14 @@ export const ShipmentDocColumns = [
 
 
   },
+
+
+
+  {
+    field: "status",
+    headerName: "Status",
+    width: 180,
+  },
 ]
 
 export const shipmentProductsColumns = [
