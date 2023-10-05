@@ -18,9 +18,17 @@ const ShipmentDocUpload = () => {
     const [data, setData] = useState([]);
     const { openSnackbar } = useContext(SnackbarContext);
     const [isLoading, setIsLoading] = useState(true);
+    const [showCustomerId, setShowCustomerId] = useState(false);
     const [openPopup, setOpenPopup] = useState(false);
     const [onClose, setOnClose] = useState(false);
     const navigate = useNavigate()
+
+     // I get the selected Row data in the session storage
+     const getRowData = sessionStorage.getItem("shipmentVerification");
+     const parsedRowData = JSON.parse(getRowData);
+    //  console.log(parsedRowData);
+     let customerId = parsedRowData?.customer_id
+
 
     // take product id from url
     const productId = useParams().productId;
@@ -40,6 +48,20 @@ const ShipmentDocUpload = () => {
     };
     useEffect(() => {
         refectDocList();
+
+          // customer id api
+        const fetchCustomerId = async () => {
+           try {
+                const response = await newRequest.get(`/getGs1userById?id=${customerId}`)
+                // console.log(response?.data);
+                setShowCustomerId(response?.data ?? [])
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchCustomerId();
     }, []);
 
 
@@ -135,7 +157,7 @@ const ShipmentDocUpload = () => {
             <div className="p-3 h-full sm:ml-72">
                 {/* Header */}
                 <div className="popup-header -mt-3">
-                    <div className="w-full font-body p-6 shadow-xl rounded-md text-black bg-[#D4EDDA] text-xl mb:2 md:mb-5">
+                    <div className="flex justify-between  w-full font-body p-6 shadow-xl rounded-md text-black bg-[#D4EDDA] text-xl mb:2 md:mb-5">
                     <div className='flex justify-start items-center gap-2 text-xs sm:text-sm'>
                         <div>
                             <img src={gs1logo} className='h-10 w-10' alt='' />
@@ -146,7 +168,11 @@ const ShipmentDocUpload = () => {
                           {/* <p>Member ID: : <span className='font-semibold'>{parsedRowData?.id}</span></p> */}
                         </div>
                     </div>
+                        <div className='sm:text-2xl text-sm font-semibold text-red-600'>
+                            <p>{showCustomerId?.company_name_eng}</p>
+                        </div>
                     </div>
+
                 </div>
                 <ShipmentDocUploadPopup
                     open={openPopup}

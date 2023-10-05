@@ -242,8 +242,8 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
                 </div>
                 <div>
                   <p className='font-semibold'>{parsedRowData?.email}</p>
-                  <p>This number is registered to company: : <span className='font-semibold'>{parsedRowData?.company_name_eng}</span></p>
-                  <p>Member ID: : <span className='font-semibold'>{parsedRowData?.id}</span></p>
+                  <p>This number is registered to company: : <span className='font-semibold'>{barcode?.productnameenglish}</span></p>
+                  <p>Member ID: : <span className='font-semibold'>{barcode?.member_id}</span></p>
                 </div>
               </div>
             </div>
