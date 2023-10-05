@@ -179,7 +179,7 @@ const VerifyShipment = () => {
                                         <div className='flex w-[50%] gap-2'>
                                             <p>:</p>
                                             <p className='font-semibold'>{parsedRowData?.customer_id}</p>
-                                        </div>
+                                        </div> 
                                     </div>
                                 </div>
                             </div>
