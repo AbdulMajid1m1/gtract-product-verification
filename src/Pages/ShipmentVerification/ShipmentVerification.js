@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { shipmentVerificationColumn } from "../../utils/datatablesource";
+import { shipmentProductsColumns, shipmentVerificationColumn } from "../../utils/datatablesource";
 
 import { useNavigate } from "react-router-dom";
 import VerifiedIcon from '@mui/icons-material/Verified';
@@ -12,7 +12,8 @@ import Swal from "sweetalert2";
 
 const ShipmentVerification = () => {
   const [data, setData] = useState([]);
-
+  const [secondGridData, setSecondGridData] = useState([]);
+  const [isShipmentProductDataLoading, setIsShipmentProductDataLoading] = useState(false)
 
   const { openSnackbar } = useContext(SnackbarContext);
 
@@ -20,13 +21,7 @@ const ShipmentVerification = () => {
   const [filteredData, setFilteredData] = useState([]); // for the map markers
   const navigate = useNavigate()
 
-  const [error, setError] = useState(false);
-  const [message, setMessage] = useState("");
-  const resetSnakeBarMessages = () => {
-    setError(null);
-    setMessage(null);
 
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +39,29 @@ const ShipmentVerification = () => {
       }
     };
 
-    fetchData(); // Calling the function within useEffect, not inside itself
+    fetchData();
+
+    const getAllShipmentsProducts = async () => {
+      setIsShipmentProductDataLoading(true)
+      try {
+
+        const response = await newRequest.get("/getAllVerifiedShipmentProducts")
+
+        console.log(response?.data);
+
+        setSecondGridData(response?.data ?? [])
+        setFilteredData(response?.data ?? [])
+      }
+      catch (error) {
+        console.log(error);
+        // setError(error?.response?.data?.message ?? "Something went wrong")
+
+      }
+      finally {
+        setIsShipmentProductDataLoading(false)
+      }
+    };
+    getAllShipmentsProducts();
   }, []); // Empty array dependency ensures this useEffect runs once on component mount
 
 
@@ -82,8 +99,44 @@ const ShipmentVerification = () => {
         icon: 'error',
         confirmButtonText: 'Okay'
       });
+
+
     }
   };
+
+  const handleRowClickInParent = async (item) => {
+
+    if (item.length === 0) {
+      setFilteredData(secondGridData)
+      return
+    }
+    // const filteredData = secondGridData.filter((singleItem) => {
+    //   return Number(singleItem?.shipment_id) == Number(item[0]?.shipment_id)
+    // })
+
+    // call api
+    setIsShipmentProductDataLoading(true)
+    try {
+      const res = await newRequest.get("/getShipmentProductByShipmentId?shipmentId=" + item[0]?.shipment_id)
+      const filteredData = res?.data ?? []
+      setFilteredData(filteredData)
+    }
+    catch (error) {
+      console.log(error)
+      setFilteredData([])
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error?.response?.data?.message ?? "Something went wrong",
+        timer: 3000,
+        timerProgressBar: true,
+
+      })
+    }
+    finally {
+      setIsShipmentProductDataLoading(false)
+    }
+  }
 
 
 
@@ -99,6 +152,9 @@ const ShipmentVerification = () => {
             <DataTable data={data} title="Shipment Verification" columnsName={shipmentVerificationColumn}
               loading={isLoading}
               secondaryColor="secondary"
+              checkboxSelection='disabled'
+              handleRowClickInParent={handleRowClickInParent}
+              uniqueId="shipmentVerificationId"
 
 
               dropDownOptions={[
@@ -121,12 +177,53 @@ const ShipmentVerification = () => {
 
                 },
               ]}
-              uniqueId="shipmentVerification"
 
             />
           </div>
 
 
+          <div style={{ marginLeft: '-11px', marginRight: '-11px' }}>
+            <DataTable data={filteredData} title="Shipment Products"
+              secondaryColor="secondary"
+              columnsName={shipmentProductsColumns}
+              backButton={true}
+              checkboxSelection="disabled"
+              actionColumnVisibility={false}
+              // dropDownOptions={[
+              //   {
+              //     label: "View",
+              //     icon: (
+              //       <VisibilityIcon
+              //         fontSize="small"
+              //         color="action"
+              //         style={{ color: "rgb(37 99 235)" }}
+              //       />
+              //     ),
+              //     action: (row) => {
+              //       sessionStorage.setItem("shipmentRequest", JSON.stringify(row));
+              //       navigate("/new-shipment-request")
+
+              //     },
+              //   },
+              //   {
+              //     label: "Submit Request",
+              //     icon: <SwapHorizIcon fontSize="small" color="action" style={{ color: "rgb(37 99 235)" }} />
+              //     ,
+              //     action: handleStatusChange,
+
+              //   },
+              //   {
+              //     label: "Delete",
+              //     icon: <DeleteIcon fontSize="small" style={{ color: '#FF0032' }} />
+              //     ,
+              //     action: handleShipmentDelete,
+              //   },
+              // ]}
+              uniqueId={"shipmentRequestProductId"}
+              loading={isShipmentProductDataLoading}
+
+            />
+          </div>
 
 
 

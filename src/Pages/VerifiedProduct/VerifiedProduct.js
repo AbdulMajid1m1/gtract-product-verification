@@ -82,6 +82,7 @@ const VerifiedProduct = () => {
     }
     catch (error) {
       console.log(error)
+      setFilteredData([])
       Swal.fire({
         icon: 'error',
         title: 'Oops...',

@@ -272,13 +272,13 @@ export const ShipmentDocColumns = [
     renderCell: (params) => {
       console.log("params");
       console.log(params);
-  
+
       // Assuming 'params.row.is_verified' contains the true/false value
       const isVerified = params.row.is_verified;
-  
+
       // Define the color based on the 'isVerified' value
       const iconColor = isVerified ? "green" : "red";
-  
+
       return (
         <InsertDriveFileIcon
           style={{
@@ -291,7 +291,7 @@ export const ShipmentDocColumns = [
       );
     },
   },
-  
+
   {
     field: "is_verified",
     headerName: "Is Verified",
@@ -314,7 +314,7 @@ export const ShipmentDocColumns = [
   }
 
 
-  
+
 ]
 
 export const shipmentProductsColumns = [
@@ -384,31 +384,66 @@ export const shipmentProductsColumns = [
     width: 220,  // Similarly, you might want to render this as an image or link
     editable: true,
   },
+
   // {
   //   field: "is_verified",
   //   headerName: "Is Verified",
   //   width: 150,
-  //   editable: true,
-  //   renderCell: (params) => params.value ? 'Yes' : 'No',  // Render as 'Yes' or 'No' instead of true or false
+  //   editable: false,  // Making this non-editable as it's a custom rendered cell
+  //   renderCell: (params) => (
+  //     <Button
+  //       variant="contained"
+  //       style={{
+  //         borderRadius: '50px',  // Rounded border
+  //         padding: '2px 12px',
+  //         color: 'white',  // White text color
+  //         fontSize: '0.8rem',
+  //         backgroundColor: params.value ? 'green' : 'red',  // Green for verified, Red for not verified
+  //       }}
+  //     >
+  //       {params.value ? 'Verified' : 'Not Verified'}
+  //     </Button>
+  //   ),
   // },
+
   {
     field: "is_verified",
     headerName: "Is Verified",
-    width: 150,
-    editable: false,  // Making this non-editable as it's a custom rendered cell
-    renderCell: (params) => (
-      <Button
-        variant="contained"
-        style={{
-          borderRadius: '50px',  // Rounded border
-          padding: '2px 12px',
-          color: 'white',  // White text color
-          fontSize: '0.8rem',
-          backgroundColor: params.value ? 'green' : 'red',  // Green for verified, Red for not verified
-        }}
-      >
-        {params.value ? 'Verified' : 'Not Verified'}
-      </Button>
-    ),
-  }
+    renderCell: (params) => {
+      const status = params.row.is_verified;
+      let borderColor, textColor;
+
+      switch (status) {
+        case true: // assuming status is a boolean true
+          borderColor = "green";
+          textColor = "green";
+          break;
+        case false: // assuming status is a boolean false
+          borderColor = "crimson";
+          textColor = "crimson";
+          break;
+        default:
+          borderColor = "crimson";
+          textColor = "crimson";
+      }
+
+      return (
+        <div
+          style={{
+            border: `2px solid ${borderColor}`,
+            color: textColor,
+            padding: "2px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            borderRadius: "50px",
+            textAlign: "center",
+          }}
+        >
+          {status ? "Verified" : "Not Verified"}
+        </div>
+      );
+    },
+    width: 180,
+  },
+
 ];
