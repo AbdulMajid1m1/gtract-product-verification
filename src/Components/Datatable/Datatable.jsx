@@ -125,7 +125,8 @@ const DataTable = ({
     'gtinMainTableId',
     'ssccTableId',
     'customerListId',
-    'verfiedShipmentsId'
+    'verfiedShipmentsId',
+    'shipmentVerificationId',
   ]
   const handleRowClick = (item) => {
     console.log(item)

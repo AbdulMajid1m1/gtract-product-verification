@@ -2,6 +2,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import imageLiveUrl from "./urlConverter/imageLiveUrl";
 import { useGridApiContext } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
+import { phpImagesBaseUrl } from "./config";
 
 function ImageEditInputCell(props) {
   const { id, field, fieldUpdated, value, mode } = props;
@@ -272,13 +273,13 @@ export const ShipmentDocColumns = [
     renderCell: (params) => {
       console.log("params");
       console.log(params);
-  
+
       // Assuming 'params.row.is_verified' contains the true/false value
       const isVerified = params.row.is_verified;
-  
+
       // Define the color based on the 'isVerified' value
       const iconColor = isVerified ? "green" : "red";
-  
+
       return (
         <InsertDriveFileIcon
           style={{
@@ -291,7 +292,7 @@ export const ShipmentDocColumns = [
       );
     },
   },
-  
+
   {
     field: "is_verified",
     headerName: "Is Verified",
@@ -333,7 +334,7 @@ export const ShipmentDocColumns = [
   },
 
 
-  
+
 ]
 
 export const shipmentProductsColumns = [
@@ -394,40 +395,87 @@ export const shipmentProductsColumns = [
   {
     field: "front_image",
     headerName: "Front Image",
-    width: 220,  // You might want to render this as an image or link
+    width: 220,
     editable: true,
+    renderCell: (params) => (
+      <img
+        src={phpImagesBaseUrl + "/" + params.row.front_image}
+        alt="Front Image"
+        style={{
+          width: '90%',
+          height: '90%',
+          objectFit: 'contain',
+          cursor: 'pointer'
+        }}
+        onClick={() => {
+          window.open(phpImagesBaseUrl + "/" + params.row.front_image, '_blank', 'width=400,height=300,top=0,left=0');
+        }}
+      />
+    )
   },
   {
     field: "back_image",
     headerName: "Back Image",
-    width: 220,  // Similarly, you might want to render this as an image or link
+    width: 220,
     editable: true,
+    renderCell: (params) => (
+      <img
+        src={phpImagesBaseUrl + "/" + params.row.back_image}
+        alt="Back Image"
+        style={{
+          width: '90%',
+          height: '90%',
+          objectFit: 'contain',
+          cursor: 'pointer'
+        }}
+        onClick={() => {
+          window.open(phpImagesBaseUrl + "/" + params.row.back_image, '_blank', 'width=400,height=300,top=0,left=0');
+        }}
+      />
+    )
   },
-  // {
-  //   field: "is_verified",
-  //   headerName: "Is Verified",
-  //   width: 150,
-  //   editable: true,
-  //   renderCell: (params) => params.value ? 'Yes' : 'No',  // Render as 'Yes' or 'No' instead of true or false
-  // },
+
+
+
+
   {
     field: "is_verified",
     headerName: "Is Verified",
-    width: 150,
-    editable: false,  // Making this non-editable as it's a custom rendered cell
-    renderCell: (params) => (
-      <Button
-        variant="contained"
-        style={{
-          borderRadius: '50px',  // Rounded border
-          padding: '2px 12px',
-          color: 'white',  // White text color
-          fontSize: '0.8rem',
-          backgroundColor: params.value ? 'green' : 'red',  // Green for verified, Red for not verified
-        }}
-      >
-        {params.value ? 'Verified' : 'Not Verified'}
-      </Button>
-    ),
-  }
+    renderCell: (params) => {
+      const status = params.row.is_verified;
+      let borderColor, textColor;
+
+      switch (status) {
+        case true: // assuming status is a boolean true
+          borderColor = "green";
+          textColor = "green";
+          break;
+        case false: // assuming status is a boolean false
+          borderColor = "crimson";
+          textColor = "crimson";
+          break;
+        default:
+          borderColor = "crimson";
+          textColor = "crimson";
+      }
+
+      return (
+        <div
+          style={{
+            border: `2px solid ${borderColor}`,
+            color: textColor,
+            padding: "2px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            borderRadius: "50px",
+            textAlign: "center",
+          }}
+        >
+          {status ? "Verified" : "Not Verified"}
+        </div>
+      );
+    },
+    width: 180,
+  },
+
 ];

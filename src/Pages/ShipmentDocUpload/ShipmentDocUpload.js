@@ -24,11 +24,11 @@ const ShipmentDocUpload = () => {
     const [onClose, setOnClose] = useState(false);
     const navigate = useNavigate()
 
-     // I get the selected Row data in the session storage
-     const getRowData = sessionStorage.getItem("shipmentVerification");
-     const parsedRowData = JSON.parse(getRowData);
+    // I get the selected Row data in the session storage
+    const getRowData = sessionStorage.getItem("shipmentVerification");
+    const parsedRowData = JSON.parse(getRowData);
     //  console.log(parsedRowData);
-     let vendorId = parsedRowData?.vendor_id;
+    let vendorId = parsedRowData?.vendor_id;
 
 
     // take product id from url
@@ -52,11 +52,11 @@ const ShipmentDocUpload = () => {
 
         // Vendor_id api to Get the Company Name
         const fetchCustomerId = async () => {
-           try {
+            try {
                 const response = await newRequest.get(`/getVendorsById?id=${vendorId}`)
                 // console.log(response?.data);
                 setShowCustomerId(response?.data[0] ?? [])
-                
+
             } catch (error) {
                 console.log(error);
             }
@@ -83,12 +83,20 @@ const ShipmentDocUpload = () => {
 
     }
 
-    // const handleView = async (row) => {
-    //     // open url in new chorme with small window
-    //     const url = row?.document_url;
-    //     console.log(url);
+    const handleView = async (row) => {
+        // Get the URL from the row
+        const url = row?.document_url;
 
-    // }
+        // Open the URL in a new, smaller window in the top-left corner
+        const width = 400; // adjusted width
+        const height = 300; // adjusted height
+        const left = 0;
+        const top = 0;
+        const windowFeatures = `width=${width},height=${height},left=${left},top=${top},location=no,menubar=no,toolbar=no,status=no`;
+        const liveUrl = imageLiveUrl(url);
+        window.open(liveUrl, "_blank", windowFeatures).focus();
+    };
+
 
     // get the cardData from sesstion stoaage
     const cardData = JSON.parse(sessionStorage.getItem('selectedCardData'));
@@ -155,7 +163,7 @@ const ShipmentDocUpload = () => {
 
     const handleValidate = async (row) => {
         console.log(row)
-        
+
         try {
             const response = await newRequest.put('/updateDocumentVerificationStatus', {
                 document_id: row.document_id,
@@ -181,7 +189,7 @@ const ShipmentDocUpload = () => {
                 icon: 'error',
                 confirmButtonText: 'Okay'
             });
-        }   
+        }
     }
 
 
@@ -225,16 +233,16 @@ const ShipmentDocUpload = () => {
                 {/* Header */}
                 <div className="popup-header -mt-3">
                     <div className="flex justify-between  w-full font-body p-6 shadow-xl rounded-md text-black bg-[#D4EDDA] text-xl mb:2 md:mb-5">
-                    <div className='flex justify-start items-center gap-2 text-xs sm:text-sm'>
-                        <div>
-                            <img src={gs1logo} className='h-10 w-10' alt='' />
+                        <div className='flex justify-start items-center gap-2 text-xs sm:text-sm'>
+                            <div>
+                                <img src={gs1logo} className='h-10 w-10' alt='' />
+                            </div>
+                            <div>
+                                <p className='font-semibold'>Document Id {productId}</p>
+                                <p>Product Name: : <span className='font-semibold'>{cardData?.productnameenglish}</span></p>
+                                {/* <p>Member ID: : <span className='font-semibold'>{parsedRowData?.id}</span></p> */}
+                            </div>
                         </div>
-                        <div>
-                            <p className='font-semibold'>Document Id {productId}</p>
-                            <p>Product Name: : <span className='font-semibold'>{cardData?.productnameenglish}</span></p>
-                          {/* <p>Member ID: : <span className='font-semibold'>{parsedRowData?.id}</span></p> */}
-                        </div>
-                    </div>
                         <div className='sm:text-2xl text-sm font-semibold text-red-600'>
                             <p>Company: {showCustomerId?.company_name_English}</p>
                         </div>
@@ -267,6 +275,16 @@ const ShipmentDocUpload = () => {
                                 icon: <FileDownloadIcon fontSize="small" style={{ color: '#FF0032' }} />
                                 ,
                                 action: handleDownload,
+                            },
+                            {
+                                label: "View",
+                                icon: (
+                                    <VisibilityIcon
+                                        fontSize="small"
+                                        style={{ color: "rgb(37 99 235)" }}
+                                    />
+                                ),
+                                action: handleView,
                             },
                             {
                                 label: "Validate",
