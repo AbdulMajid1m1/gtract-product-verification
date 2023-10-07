@@ -4,6 +4,21 @@ import { useGridApiContext } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
 import { phpImagesBaseUrl } from "./config";
 
+
+const handleView = async (row) => {
+  // Get the URL from the row
+  const url = row?.document_url;
+
+  // Open the URL in a new, smaller window in the top-left corner
+  const width = 400; // adjusted width
+  const height = 300; // adjusted height
+  const left = 0;
+  const top = 0;
+  const windowFeatures = `width=${width},height=${height},left=${left},top=${top},location=no,menubar=no,toolbar=no,status=no`;
+  const liveUrl = imageLiveUrl(url);
+  window.open(liveUrl, "_blank", windowFeatures).focus();
+};
+
 function ImageEditInputCell(props) {
   const { id, field, fieldUpdated, value, mode } = props;
   const apiRef = useGridApiContext();
@@ -282,6 +297,7 @@ export const ShipmentDocColumns = [
 
       return (
         <InsertDriveFileIcon
+          onClick={() => handleView(params.row)}
           style={{
             color: iconColor,
             width: "40px",
