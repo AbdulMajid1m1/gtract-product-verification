@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { ProductsDataColumn, shipmentVerificationColumn } from "../../utils/datatablesource";
+import { ProductsDataColumn, shipmentVerificationColumn, verifiedProductColumn } from "../../utils/datatablesource";
 
 import { useNavigate } from "react-router-dom";
 // import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -106,7 +106,7 @@ const InventoryItems = () => {
         <div className='h-auto w-full shadow-xl'>
           <div style={{ marginLeft: '-11px', marginRight: '-11px' }}>
 
-            <DataTable data={data} title="Inventory Items" columnsName={shipmentVerificationColumnd}
+            <DataTable data={data} title="Inventory Items" columnsName={verifiedProductColumn}
               loading={isLoading}
               secondaryColor="secondary"
 
