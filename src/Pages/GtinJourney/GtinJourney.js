@@ -409,6 +409,10 @@ const GtinJourney = () => {
 
               />
             </button>
+
+            <div>
+                <p className='text-white font-medium sm:text-xl text-sm ml-5'>Product Information powered by GS1 Standards</p>
+            </div>
           </div>
           {/* GTIN search */}
           <div className='w-[60%] mt-2 overflow-auto h-full flex-shrink-0' style={{ maxHeight: '115vh' }}>
@@ -631,7 +635,7 @@ const GtinJourney = () => {
           <div className='h-auto w-full mt-2'>
             <div style={{ marginLeft: '-11px', marginRight: '-11px', marginTop: '-40px' }}>
 
-              <DataTable data={data} title={"Gtin Journey"} columnsName={ShipmentDocColumns} backButton={false}
+              <DataTable data={data} title={"EPCIS Events"} columnsName={ShipmentDocColumns} backButton={false}
                   secondaryColor="secondary"
                   // loading={isLoading}
                   uniqueId="GtinJourneyId"
