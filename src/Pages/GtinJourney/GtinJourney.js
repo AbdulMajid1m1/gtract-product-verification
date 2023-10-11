@@ -217,7 +217,7 @@ const GtinJourney = () => {
           <div className='h-auto w-full mt-2'>
             <div style={{ marginLeft: '-11px', marginRight: '-11px', marginTop: '-40px' }}>
 
-              <DataTable data={data} title={"Gtin Journey"} columnsName={ShipmentDocColumns} backButton={false}
+              <DataTable data={data} title={"EPCIS Events"} columnsName={ShipmentDocColumns} backButton={false}
                 secondaryColor="secondary"
                 // loading={isLoading}
                 uniqueId="GtinJourneyId"
