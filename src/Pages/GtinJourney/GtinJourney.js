@@ -413,7 +413,7 @@ const GtinJourney = () => {
             <div>
                 <p className='text-white font-medium sm:text-xl text-sm ml-5'>Product Information powered by GS1 Standards</p>
             </div>
-          </div>
+          </div> 
           {/* GTIN search */}
           <div className='w-[60%] mt-2 overflow-auto h-full flex-shrink-0' style={{ maxHeight: '115vh' }}>
             {/* <div className='flex-shrink-0 overflow-auto h-full mr-4' style={{ width: '60%', maxHeight: '100vh' }}> */}
