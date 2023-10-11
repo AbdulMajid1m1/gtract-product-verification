@@ -179,7 +179,7 @@ const GtinJourney = () => {
                     </table>
                   </div>
                 </div>
-              </div>
+              </div> 
 
               <div className="w-full md:w-1/3 flex flex-col justify-center items-center -mt-6 p-8">
                 {/* Add your image element here */}
