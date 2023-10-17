@@ -45,10 +45,13 @@ const CodificationTab = () => {
     }
 
     // get the product session data
-    const gtinData = JSON.parse(sessionStorage.getItem("productData"));
-    console.log(gtinData);
+    // const gtinData = JSON.parse(sessionStorage.getItem("productData"));
+    // console.log(gtinData);
 
     const [selectedOption, setSelectedOption] = useState("GS1-GPC");
+    const [gpcData, setGpcData] = useState([]);
+    // const [saveFirstApiData, setSaveFirstApiData] = useState([]); // save the first api data to use in the second api call
+    const [gpcBricks, setGpcBricks] = useState([]);
 
   //Second Tab
   const handleOptionChange = (option) => {
@@ -56,27 +59,56 @@ const CodificationTab = () => {
 
     switch (option) {
       case "GS1-GPC":
-        // newRequest
-        //   .get(`/getSafetyInformationByGtin/${gtinData?.gtin}`)
-        //   .then((response) => {
-        //     console.log(response.data);
-        //     setSafetyInformation(response.data);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //     openSnackbar(
-        //       err?.response?.data?.message ?? "something went wrong!",
-        //       "error"
-        //     );
-        //     setSafetyInformation([]);
-        //   });
+        // first api call
+        axios
+          .post('https://gs1ksa.org/api/GROUTE/gpc/search', {
+            "gpc": "10000068"
+          })
+          .then((response) => {
+            console.log(response.data);
+            setGpcData(response.data);
+            // i save the classCode of the first api call to use it in the second api call
+            const classCode = response.data.data.ClassCode;
+            console.log(classCode);
+
+            
+            // Second API call
+            axios
+              .post('https://gs1ksa.org/api/GROUTE/gpc/find/bricks', {
+                // "class_code": "50181700"
+                "class_code": classCode
+              })
+              .then((response) => {
+                console.log(response.data);
+                setGpcBricks(response.data);
+                // Handle the response data from the second API call as needed
+              })
+              .catch((err) => {
+                console.log(err);
+                openSnackbar(
+                  err?.response?.data?.message ?? "something went wrong with the second API call!",
+                  "error"
+                );
+                
+              });
+          })
+
+          // Handle the response data from the first API call as needed
+          .catch((err) => {
+            console.log(err);
+            openSnackbar(
+              err?.response?.data?.message ?? "something went wrong!",
+              "error"
+            );
+            setGpcData([]);
+          });
         break;
 
+
       case "HS-CODES":
-          axios.post('https://gs1ksa.org/api/find/hscode', {
-            // "hscode": gtinData
-            "hscode": "0204 42"
-          })
+          axios.post('https://gs1ksa.org/api/GROUTE/gpc/find/hs/code', {
+            "brick_title": "Baking"
+        })
           .then((response) => {
             console.log(response?.data)
             setHsCode(response?.data)
@@ -120,11 +152,11 @@ const CodificationTab = () => {
                     ) : (
                       <FaAngleRight />
                     )}
-                    Segment 73000000 Kitchenware and Tableware
+                    {gpcData?.data?.SegmentTitle}
                   </a>
                   <ul className={`ml-6 ${open ? 'block' : 'hidden'}`}>
-                    <li className="px-2 hover:bg-secondary-100">Second-one</li>
-                    <li className="px-2 hover:bg-secondary-100">Second-two</li>
+                    <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.SegmentCode}</li>
+                    {/* <li className="px-2 hover:bg-secondary-100">Second-two</li> */}
                     <li>
                       <a
                         href="#"
@@ -136,9 +168,10 @@ const CodificationTab = () => {
                         ) : (
                           <FaAngleRight />
                         )}
-                        Family 73050000 Tableware
+                        {gpcData?.data?.FamilyTitle}
                       </a>
                       <ul className={`ml-6 ${subOpen ? 'block' : 'hidden'}`}>
+                        <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.FamilyCode}</li>
                         <li>
                           <a
                             href="#"
@@ -150,12 +183,10 @@ const CodificationTab = () => {
                             ) : (
                               <FaAngleRight />
                             )}
-                            Class 73050000 Tableware (Disposable)
+                            {gpcData?.data?.ClassTitle}
                           </a>
                           <ul className={`ml-10 ${thirdOpen ? 'block' : 'hidden'}`}>
-                            <li className="px-2 hover:bg-secondary-100">Fourth-one</li>
-                            <li className="px-2 hover:bg-secondary-100">Fourth-two</li>
-                            <li className="px-2 hover:bg-secondary-100">Fourth-three</li>
+                            <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.ClassCode}</li>
                           </ul>
                         </li>
                         <li>
@@ -169,15 +200,13 @@ const CodificationTab = () => {
                             ) : (
                               <FaAngleRight />
                             )}
-                            Brick 10007262 Flatware (Disposable)
+                            {gpcData?.data?.BrickTitle}
                           </a>
                           <ul className={`ml-16 ${fourthOpen ? 'block' : 'hidden'}`}>
-                            <li className="px-2 hover:bg-secondary-100">Fourth-one</li>
-                            <li className="px-2 hover:bg-secondary-100">Fourth-two</li>
-                            <li className="px-2 hover:bg-secondary-100">Fourth-three</li>
-                          </ul>
+                            <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.BrickCode}</li>
+                            </ul>
                         </li>
-                        <li>
+                        {/* <li>
                           <a
                             href="#"
                             onClick={toggleFifthOpen}
@@ -214,7 +243,7 @@ const CodificationTab = () => {
                             <li className="px-2 hover:bg-secondary-100">Fourth-two</li>
                             <li className="px-2 hover:bg-secondary-100">Fourth-three</li>
                           </ul>
-                        </li>
+                        </li> */}
                       </ul>
                     </li>
                   </ul>
@@ -225,10 +254,17 @@ const CodificationTab = () => {
 
       case "HS-CODES":
         return (
-          <div className='h-auto w-full mt-3 px-2'>
-              <h1>{hsCode?.gpc?.code}</h1>
-              <h1>{hsCode?.gpc?.name}</h1>
-              <h1>{hsCode?.gpc?.title}</h1>
+           <div className='h-52 w-full mt-3 px-2 overflow-x-auto'>
+            {hsCode?.data?.map((item, index) => (
+              <div key={index}>
+                <h1 className='text-primary'>Harmonized Code: <span className='text-black'>{item.HarmonizedCode}</span></h1>
+                <h1 className='text-primary'>Arabic Name: <span className='text-black'>{item.ItemArabicName}</span></h1>
+                <h1 className='text-primary'>English Name: <span className='text-black'>{item.ItemEnglishName}</span></h1>
+                <h1 className='text-primary'>Duty Rate: <span className='text-black'>{item.DutyRate || 'N/A'}</span></h1>
+                <h1 className='text-primary'>Procedures: <span className='text-black'>{item.Procedures || 'N/A'}</span></h1>
+                <h1 className='text-primary'>Date: <span className='text-black'>{item.Date || 'N/A'}</span></h1>
+              </div>
+            ))}
           </div>
         );
     }     
