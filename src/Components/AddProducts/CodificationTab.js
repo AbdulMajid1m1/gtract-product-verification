@@ -126,10 +126,11 @@ const CodificationTab = () => {
 
 
       case "HS-CODES":
+        console.log(selectedBrick);
         setIsLoading(true);
           axios.post('https://gs1ksa.org/api/GROUTE/gpc/find/hs/code', {
-            // "brick_title": selectedBrick
-            "brick_title": "Baking"
+            "brick_title": selectedBrick
+            // "brick_title": "Baking"
         })
           .then((response) => {
             console.log(response?.data)
