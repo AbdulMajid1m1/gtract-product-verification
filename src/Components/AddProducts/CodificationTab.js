@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa';
 import gtrackIcon from "../../Images/gtrackicons.png"
 import axios from 'axios';
+import { RiseLoader } from 'react-spinners';
 import { SnackbarContext } from '../../Contexts/SnackbarContext';
 
 const CodificationTab = () => {
@@ -12,6 +13,7 @@ const CodificationTab = () => {
   const [fifthOpen, setFifthOpen] = useState(false);
   const [sixthOpen, setSixthOpen] = useState(false);
   const [hsCode, setHsCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { openSnackbar } = useContext(SnackbarContext);
 
 
@@ -53,12 +55,29 @@ const CodificationTab = () => {
     // const [saveFirstApiData, setSaveFirstApiData] = useState([]); // save the first api data to use in the second api call
     const [gpcBricks, setGpcBricks] = useState([]);
 
+     // State to store the selected row
+   const [selectedRow, setSelectedRow] = useState(null);
+
+   // Function to handle row selection
+   const handleRowClick = (item) => {
+     sessionStorage.setItem('selectedRow', JSON.stringify(item));
+     console.log('Selected Row:', item);
+     setSelectedRow(item);
+   };
+
+   const [selectedBrick, setSelectedBrick] = useState('');
+
+   const handleBrickChange = (e) => {
+     setSelectedBrick(e.target.value);
+   };
+
   //Second Tab
   const handleOptionChange = (option) => {
     setSelectedOption(option);
 
     switch (option) {
       case "GS1-GPC":
+        setIsLoading(true);
         // first api call
         axios
           .post('https://gs1ksa.org/api/GROUTE/gpc/search', {
@@ -70,6 +89,7 @@ const CodificationTab = () => {
             // i save the classCode of the first api call to use it in the second api call
             const classCode = response.data.data.ClassCode;
             console.log(classCode);
+            setIsLoading(false);
 
             
             // Second API call
@@ -79,8 +99,8 @@ const CodificationTab = () => {
                 "class_code": classCode
               })
               .then((response) => {
-                console.log(response.data);
-                setGpcBricks(response.data);
+                console.log(response.data?.data);
+                setGpcBricks(response.data?.data);
                 // Handle the response data from the second API call as needed
               })
               .catch((err) => {
@@ -106,12 +126,15 @@ const CodificationTab = () => {
 
 
       case "HS-CODES":
+        setIsLoading(true);
           axios.post('https://gs1ksa.org/api/GROUTE/gpc/find/hs/code', {
+            // "brick_title": selectedBrick
             "brick_title": "Baking"
         })
           .then((response) => {
             console.log(response?.data)
             setHsCode(response?.data)
+            setIsLoading(false);
           })
           .catch((error) => {
             console.log(error);
@@ -119,6 +142,7 @@ const CodificationTab = () => {
               error?.response?.data?.message ?? "something went wrong!",
               "error"
             );
+            setIsLoading(false);
           })
         break;
 
@@ -134,12 +158,44 @@ const CodificationTab = () => {
     }
   };
 
+  
 
   const renderDataGrid = () => {
     switch (selectedOption) {
       case "GS1-GPC":
         return (
           <div>
+            <div className='flex gap-2 w-full'>
+              <span
+                  className={`bg-[#00acee] w-full py-2 flex justify-center px-1 rounded-md text-white items-center gap-2 cursor-pointer
+                    `}
+                  onClick={() => handleOptionChange("GS1-GPC")}
+                >
+                  <img
+                    src={gtrackIcon}
+                    className="w-5 h-5 ml-1"
+                    alt=""
+                  />
+                  Global Product Classification (GPC)
+                </span>
+                <span
+                  className={`bg-[#00acee] w-full py-2 flex justify-center px-1 rounded-md items-center gap-2 cursor-pointer`}
+                >
+                  <img
+                    src={gtrackIcon}
+                    className="w-5 h-5 ml-1"
+                    alt=""
+                  />
+                   <select className='bg-[#00acee] w-full text-white' value={selectedBrick} onChange={handleBrickChange}>
+                      <option value="">GPC Bricks Title</option>
+                      {gpcBricks?.map((brick, index) => (
+                        <option key={index} value={brick.BrickTitle}>
+                          {brick.BrickTitle}
+                        </option>
+                      ))}
+                    </select>
+                </span>
+            </div>
               <ul>
                 <li>
                   <a
@@ -254,9 +310,14 @@ const CodificationTab = () => {
 
       case "HS-CODES":
         return (
-           <div className='h-52 w-full mt-3 px-2 overflow-x-auto'>
-            {hsCode?.data?.map((item, index) => (
-              <div key={index}>
+           <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+            {hsCode?.data?.map((item) => (
+              <div 
+                key={item.HarmonizedCode} // Use a unique key for each item
+                className={`cursor-pointer flex flex-col gap-2 ${selectedRow === item ? 'selected-row' : ''}`}
+                onClick={() => handleRowClick(item)} // Attach the onClick handler
+
+                >
                 <h1 className='text-primary'>Harmonized Code: <span className='text-black'>{item.HarmonizedCode}</span></h1>
                 <h1 className='text-primary'>Arabic Name: <span className='text-black'>{item.ItemArabicName}</span></h1>
                 <h1 className='text-primary'>English Name: <span className='text-black'>{item.ItemEnglishName}</span></h1>
@@ -272,6 +333,25 @@ const CodificationTab = () => {
 
   return (
        <div className='flex justify-between gap-2 w-full'>
+        {isLoading &&
+
+            <div className='loading-spinner-background'
+              style={{
+                zIndex: 9999, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'fixed'
+
+
+              }}
+            >
+              <RiseLoader
+                size={18}
+                color={"#6439ff"}
+                // height={4}
+                loading={isLoading}
+              />
+            </div>
+            }
+
           <div className='w-[20%] flex flex-col gap-2 mt-2'>
                 <span
                   className={`bg-[#3b5998] py-2 flex justify-start px-1 rounded-md text-white items-center gap-2 cursor-pointer 
