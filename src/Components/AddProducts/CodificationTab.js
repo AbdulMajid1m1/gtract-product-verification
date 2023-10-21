@@ -388,7 +388,8 @@ const CodificationTab = () => {
             {hsCode?.data?.map((item) => (
               <div
                 key={item.HarmonizedCode} // Use a unique key for each item
-                className={`cursor-pointer flex flex-col gap-2 ${selectedRow === item ? 'selected-row' : ''}`}
+                // className={`cursor-pointer flex flex-col gap-2 ${selectedRow === item ? 'selected-row' : ''}`}
+                className={`cursor-pointer flex flex-col gap-2 p-3 rounded-md ${selectedRow === item ? 'bg-gray-200' : 'bg-white'}`}
                 onClick={() => handleRowClick(item)} // Attach the onClick handler
 
               >
