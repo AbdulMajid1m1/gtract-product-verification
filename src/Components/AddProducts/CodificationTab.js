@@ -18,7 +18,9 @@ const CodificationTab = () => {
   // gs1ProductData get the product session data
   const gs1ProductData = JSON.parse(sessionStorage.getItem("gs1ProductData"));
   console.log(gs1ProductData);
-
+  console.log(gs1ProductData?.gpc)
+  const number = gs1ProductData.gpc.split("-")[0];
+  console.log(number);
   const toggleOpen = () => {
     setOpen(!open);
   };
@@ -94,7 +96,7 @@ const CodificationTab = () => {
     // first api call
     axios
       .post('https://gs1ksa.org/api/GROUTE/gpc/search', {
-        "gpc": gs1ProductData?.gpc_code
+        "gpc": number
         // TODO: convert harcoded value to dynamic value
       })
       .then((response) => {
