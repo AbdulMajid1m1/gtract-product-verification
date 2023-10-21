@@ -156,6 +156,25 @@ const CodificationTab = () => {
         );
         setIsLoading(false);
       })
+
+      // third api UNSPSC
+      axios.post('https://gs1ksa.org/api/GROUTE/find/commodity/by/brick/title', {
+            "brick_title": selectedRow?.ItemEnglishName
+            // "brick_title": "Caramel/Toffee Apples" // this is a test
+          })
+            .then((response) => {
+              console.log(response?.data)
+              setUnspsc(response?.data)
+              setIsLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              openSnackbar(
+                error?.response?.data?.message ?? "something went wrong!",
+                "error"
+              );
+              setIsLoading(false);
+            })
   }
   useEffect(() => {
     getGpcData()
@@ -176,24 +195,24 @@ const CodificationTab = () => {
 
     
       case "UNSPSC":
-        setIsLoading(true);
-          axios.post('https://gs1ksa.org/api/GROUTE/find/commodity/by/brick/title', {
-            "brick_title": selectedRow?.ItemEnglishName
-            // "brick_title": "Caramel/Toffee Apples" // this is a test
-          })
-            .then((response) => {
-              console.log(response?.data)
-              setUnspsc(response?.data)
-              setIsLoading(false);
-            })
-            .catch((error) => {
-              console.log(error);
-              openSnackbar(
-                error?.response?.data?.message ?? "something went wrong!",
-                "error"
-              );
-              setIsLoading(false);
-            })
+        // setIsLoading(true);
+          // axios.post('https://gs1ksa.org/api/GROUTE/find/commodity/by/brick/title', {
+          //   "brick_title": selectedRow?.ItemEnglishName
+          //   // "brick_title": "Caramel/Toffee Apples" // this is a test
+          // })
+          //   .then((response) => {
+          //     console.log(response?.data)
+          //     setUnspsc(response?.data)
+          //     setIsLoading(false);
+          //   })
+          //   .catch((error) => {
+          //     console.log(error);
+          //     openSnackbar(
+          //       error?.response?.data?.message ?? "something went wrong!",
+          //       "error"
+          //     );
+          //     setIsLoading(false);
+          //   })
         break;
 
       case "OTHER":
