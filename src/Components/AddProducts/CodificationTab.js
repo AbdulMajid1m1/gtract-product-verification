@@ -89,6 +89,7 @@ const CodificationTab = () => {
 
   const handleBrickChange = (e) => {
     getHsCode(e.target.value); // call the second api when the user select a brick from the dropdown
+    getUNSPC(e.target.value); // call the second api when the user select a brick from the dropdown
   };
 
   const getGpcData = () => {
@@ -161,6 +162,27 @@ const CodificationTab = () => {
         setIsLoading(false);
       })
   }
+
+  const getUNSPC = (selectedBrickTitle) => {
+    setIsLoading(true);
+    axios.post('https://gs1ksa.org/api/GROUTE/find/commodity/by/brick/title', {
+      "brick_title": selectedBrickTitle
+      // "brick_title": "Caramel/Toffee Apples" // this is a test
+    })
+      .then((response) => {
+        console.log(response?.data)
+        setUnspsc(response?.data)
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        openSnackbar(
+          error?.response?.data?.message ?? "something went wrong!",
+          "error"
+        );
+        setIsLoading(false);
+      })
+  }
   useEffect(() => {
     getGpcData()
   }
@@ -180,32 +202,15 @@ const CodificationTab = () => {
 
 
       case "UNSPSC":
-        setIsLoading(true);
-        axios.post('https://gs1ksa.org/api/GROUTE/find/commodity/by/brick/title', {
-          "brick_title": selectedRow?.ItemEnglishName
-          // "brick_title": "Caramel/Toffee Apples" // this is a test
-        })
-          .then((response) => {
-            console.log(response?.data)
-            setUnspsc(response?.data)
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            console.log(error);
-            openSnackbar(
-              error?.response?.data?.message ?? "something went wrong!",
-              "error"
-            );
-            setIsLoading(false);
-          })
+
         break;
 
       case "OTHER":
         setIsLoading(true);
-          axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
-               "hs_name": selectedRow?.ItemEnglishName
-            // "hs_name": "Pineapples" // this is a test
-          })
+        axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
+          "hs_name": selectedRow?.ItemEnglishName
+          // "hs_name": "Pineapples" // this is a test
+        })
         break;
 
       // Add more cases for other options
@@ -273,7 +278,7 @@ const CodificationTab = () => {
                   ) : (
                     <FaAngleRight />
                   )}
-                    <h1 className='font-bold'>Segment: </h1> {gpcData?.data?.SegmentTitle}
+                  <h1 className='font-bold'>Segment: </h1> {gpcData?.data?.SegmentTitle}
                 </a>
                 <ul className={`ml-6 ${open ? 'block' : 'hidden'}`}>
                   <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.SegmentCode}</li>
