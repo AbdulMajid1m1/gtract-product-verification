@@ -202,22 +202,9 @@ const CodificationTab = () => {
 
       case "OTHER":
         setIsLoading(true);
-        axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
-          // "brick_title": selectedRow?.ItemEnglishName
-          "hs_name": "Pineapples" // this is a test
-        })
-          .then((response) => {
-            console.log(response?.data)
-            setOthers(response?.data)
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            console.log(error);
-            openSnackbar(
-              error?.response?.data?.message ?? "something went wrong!",
-              "error"
-            );
-            setIsLoading(false);
+          axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
+               "hs_name": selectedRow?.ItemEnglishName
+            // "hs_name": "Pineapples" // this is a test
           })
         break;
 
