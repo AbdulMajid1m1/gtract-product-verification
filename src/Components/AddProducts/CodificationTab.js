@@ -286,7 +286,7 @@ const CodificationTab = () => {
                   ) : (
                     <FaAngleRight />
                   )}
-                  {gpcData?.data?.SegmentTitle}
+                    <h1 className='font-bold'>Segment: </h1> {gpcData?.data?.SegmentTitle}
                 </a>
                 <ul className={`ml-6 ${open ? 'block' : 'hidden'}`}>
                   <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.SegmentCode}</li>
@@ -302,7 +302,7 @@ const CodificationTab = () => {
                       ) : (
                         <FaAngleRight />
                       )}
-                      {gpcData?.data?.FamilyTitle}
+                      <h1 className='font-bold'>FamilyTitle: </h1>{gpcData?.data?.FamilyTitle}
                     </a>
                     <ul className={`ml-6 ${subOpen ? 'block' : 'hidden'}`}>
                       <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.FamilyCode}</li>
@@ -317,7 +317,7 @@ const CodificationTab = () => {
                           ) : (
                             <FaAngleRight />
                           )}
-                          {gpcData?.data?.ClassTitle}
+                          <h1 className='font-bold'>Class: </h1>{gpcData?.data?.ClassTitle}
                         </a>
                         <ul className={`ml-10 ${thirdOpen ? 'block' : 'hidden'}`}>
                           <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.ClassCode}</li>
@@ -334,7 +334,7 @@ const CodificationTab = () => {
                           ) : (
                             <FaAngleRight />
                           )}
-                          {gpcData?.data?.BrickTitle}
+                          <h1 className='font-bold'>Brick: </h1> {gpcData?.data?.BrickTitle}
                         </a>
                         <ul className={`ml-16 ${fourthOpen ? 'block' : 'hidden'}`}>
                           <li className="px-2 hover:bg-secondary-100">{gpcData?.data?.BrickCode}</li>
