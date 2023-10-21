@@ -54,16 +54,32 @@ const CodificationTab = () => {
   const [gpcData, setGpcData] = useState([]);
   // const [saveFirstApiData, setSaveFirstApiData] = useState([]); // save the first api data to use in the second api call
   const [gpcBricks, setGpcBricks] = useState([]);
+  const [unspsc, setUnspsc] = useState([]);
+  const [others, setOthers] = useState([]);
 
   // State to store the selected row
   const [selectedRow, setSelectedRow] = useState(null);
 
   // Function to handle row selection
+  // const handleRowClick = (item) => {
+  //   sessionStorage.setItem('selectedRow', JSON.stringify(item));
+  //   console.log('Selected Row:', item);
+  //   setSelectedRow(item);
+  //   console.log(selectedRow?.ItemEnglishName);
+  // };
+
   const handleRowClick = (item) => {
-    sessionStorage.setItem('selectedRow', JSON.stringify(item));
-    console.log('Selected Row:', item);
+    // Update the state
     setSelectedRow(item);
   };
+  useEffect(() => {
+    if (selectedRow) {
+      sessionStorage.setItem('selectedRow', JSON.stringify(selectedRow));
+      console.log('Selected Row:', selectedRow);
+      console.log(selectedRow?.ItemEnglishName);
+    }
+  }, [selectedRow]);
+  
 
   const [selectedBrick, setSelectedBrick] = useState('');
 
@@ -152,19 +168,53 @@ const CodificationTab = () => {
     switch (option) {
       case "GS1-GPC":
         // getGpcData()
-
-
         break;
-
 
       case "HS-CODES":
         // getHsCode()
         break;
 
+    
       case "UNSPSC":
+        setIsLoading(true);
+          axios.post('https://gs1ksa.org/api/GROUTE/find/commodity/by/brick/title', {
+            "brick_title": selectedRow?.ItemEnglishName
+            // "brick_title": "Caramel/Toffee Apples" // this is a test
+          })
+            .then((response) => {
+              console.log(response?.data)
+              setUnspsc(response?.data)
+              setIsLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              openSnackbar(
+                error?.response?.data?.message ?? "something went wrong!",
+                "error"
+              );
+              setIsLoading(false);
+            })
         break;
 
       case "OTHER":
+        setIsLoading(true);
+          axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
+            // "brick_title": selectedRow?.ItemEnglishName
+            "hs_name": "Pineapples" // this is a test
+          })
+            .then((response) => {
+              console.log(response?.data)
+              setOthers(response?.data)
+              setIsLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+              openSnackbar(
+                error?.response?.data?.message ?? "something went wrong!",
+                "error"
+              );
+              setIsLoading(false);
+            })
         break;
 
       // Add more cases for other options
@@ -342,16 +392,85 @@ const CodificationTab = () => {
                 onClick={() => handleRowClick(item)} // Attach the onClick handler
 
               >
-                <h1 className='text-primary'>Harmonized Code: <span className='text-black'>{item.HarmonizedCode}</span></h1>
-                <h1 className='text-primary'>Arabic Name: <span className='text-black'>{item.ItemArabicName}</span></h1>
-                <h1 className='text-primary'>English Name: <span className='text-black'>{item.ItemEnglishName}</span></h1>
-                <h1 className='text-primary'>Duty Rate: <span className='text-black'>{item.DutyRate || 'N/A'}</span></h1>
-                <h1 className='text-primary'>Procedures: <span className='text-black'>{item.Procedures || 'N/A'}</span></h1>
-                <h1 className='text-primary'>Date: <span className='text-black'>{item.Date || 'N/A'}</span></h1>
+                <div className='h-auto w-full shadow-xl p-3 rounded-md'>
+                  <h1 className='text-primary'>Harmonized Code: <span className='text-black'>{item.HarmonizedCode}</span></h1>
+                  <h1 className='text-primary'>Arabic Name: <span className='text-black'>{item.ItemArabicName}</span></h1>
+                  <h1 className='text-primary'>English Name: <span className='text-black'>{item.ItemEnglishName}</span></h1>
+                  <h1 className='text-primary'>Duty Rate: <span className='text-black'>{item.DutyRate || 'N/A'}</span></h1>
+                  <h1 className='text-primary'>Procedures: <span className='text-black'>{item.Procedures || 'N/A'}</span></h1>
+                  <h1 className='text-primary'>Date: <span className='text-black'>{item.Date || 'N/A'}</span></h1>
+                </div>
               </div>
             ))}
           </div>
         );
+
+
+        // case "UNSPSC":
+        // return (
+        //   <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+        //     {unspsc?.data?.map((item, index) => (
+        //       <div
+        //         key={index} 
+        //       >
+        //         <div className='h-auto w-full shadow-xl p-3 rounded-md'>
+        //           <h1 className='text-primary'>Family Title: <span className='text-black'>{item.FamilyTitle}</span></h1>
+        //           <h1 className='text-primary'>Class: <span className='text-black'>{item.Class}</span></h1>
+        //           <h1 className='text-primary'>ClassTitle: <span className='text-black'>{item.ClassTitle}</span></h1>
+        //           <h1 className='text-primary'>Commodity: <span className='text-black'>{item.Commodity}</span></h1>
+        //           <h1 className='text-primary'>CommodityTitle: <span className='text-black'>{item.CommodityTitle}</span></h1>
+        //         </div>
+        //       </div>
+        //     ))}
+        //   </div>
+        // );
+        case "UNSPSC":
+          return (
+            <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+              {unspsc?.data?.map((group, groupIndex) => (
+                <div key={groupIndex}>
+                  {group.map((item, index) => (
+                    <div
+                      key={index}
+                      className='shadow-xl p-3 rounded-md mb-2'
+                    >
+                      <h1 className='text-primary'>Family Title: <span className='text-black'>{item.FamilyTitle}</span></h1>
+                      <h1 className='text-primary'>Class: <span className='text-black'>{item.Class}</span></h1>
+                      <h1 className='text-primary'>ClassTitle: <span className='text-black'>{item.ClassTitle}</span></h1>
+                      <h1 className='text-primary'>Commodity: <span className='text-black'>{item.Commodity}</span></h1>
+                      <h1 className='text-primary'>CommodityTitle: <span className='text-black'>{item.CommodityTitle}</span></h1>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          );
+
+
+        case "OTHER":
+          return (
+            <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+              {others?.data?.map((item, index) => (
+                <div key={index}>
+                  <div className='h-auto w-full shadow-xl p-3 rounded-md'>
+                    <h1 className='text-primary'>Segment Code: <span className='text-black'>{item.SegmentCode}</span></h1>
+                    <h1 className='text-primary'>Segment Title: <span className='text-black'>{item.SegmentTitle}</span></h1>
+                    <h1 className='text-primary'>Family Code: <span className='text-black'>{item.FamilyCode}</span></h1>
+                    <h1 className='text-primary'>Family Title: <span className='text-black'>{item.FamilyTitle}</span></h1>
+                    <h1 className='text-primary'>Class Code: <span className='text-black'>{item.ClassCode}</span></h1>
+                    <h1 className='text-primary'>Class Title: <span className='text-black'>{item.ClassTitle}</span></h1>
+                    <h1 className='text-primary'>Brick Code: <span className='text-black'>{item.BrickCode}</span></h1>
+                    <h1 className='text-primary'>Brick Title: <span className='text-black'>{item.BrickTitle}</span></h1>
+                    <h1 className='text-primary'>Attribute Code: <span className='text-black'>{item.AttributeCode}</span></h1>
+                    <h1 className='text-primary'>Attribute Title: <span className='text-black'>{item.AttributeTitle}</span></h1>
+                    <h1 className='text-primary'>Attribute Value Code: <span className='text-black'>{item.AttributeValueCode}</span></h1>
+                    <h1 className='text-primary'>Attribute Value Title: <span className='text-black'>{item.AttributeValueTitle}</span></h1>
+                  </div>
+                </div>
+              ))}
+          </div>
+          );
+
     }
   }
 
