@@ -270,7 +270,7 @@ const CodificationTab = () => {
                 </select>
               </span>
             </div>
-            <ul>
+            <ul className='h-[80vh] w-full'>
               <li>
                 <a
                   href="#"
@@ -384,7 +384,7 @@ const CodificationTab = () => {
 
       case "HS-CODES":
         return (
-          <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+          <div className='h-[80vh] w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
             {hsCode?.data?.map((item) => (
               <div
                 key={item.HarmonizedCode} // Use a unique key for each item
@@ -427,7 +427,7 @@ const CodificationTab = () => {
         // );
         case "UNSPSC":
           return (
-            <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+            <div className='h-[80vh] w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
               {unspsc?.data?.map((group, groupIndex) => (
                 <div key={groupIndex}>
                   {group.map((item, index) => (
@@ -450,7 +450,7 @@ const CodificationTab = () => {
 
         case "OTHER":
           return (
-            <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+            <div className='h-[80vh] w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
               {others?.data?.map((item, index) => (
                 <div key={index}>
                   <div className='h-auto w-full shadow-xl p-3 rounded-md'>
