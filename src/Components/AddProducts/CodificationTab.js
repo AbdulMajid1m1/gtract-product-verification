@@ -199,8 +199,8 @@ const CodificationTab = () => {
       case "OTHER":
         setIsLoading(true);
           axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
-            // "brick_title": selectedRow?.ItemEnglishName
-            "hs_name": "Pineapples" // this is a test
+               "hs_name": selectedRow?.ItemEnglishName
+            // "hs_name": "Pineapples" // this is a test
           })
             .then((response) => {
               console.log(response?.data)
