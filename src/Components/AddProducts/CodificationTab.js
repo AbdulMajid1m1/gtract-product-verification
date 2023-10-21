@@ -15,7 +15,9 @@ const CodificationTab = () => {
   const [hsCode, setHsCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { openSnackbar } = useContext(SnackbarContext);
-
+  // gs1ProductData get the product session data
+  const gs1ProductData = JSON.parse(sessionStorage.getItem("gs1ProductData"));
+  console.log(gs1ProductData);
 
   const toggleOpen = () => {
     setOpen(!open);
@@ -79,7 +81,7 @@ const CodificationTab = () => {
       console.log(selectedRow?.ItemEnglishName);
     }
   }, [selectedRow]);
-  
+
 
   const [selectedBrick, setSelectedBrick] = useState('');
 
@@ -92,7 +94,7 @@ const CodificationTab = () => {
     // first api call
     axios
       .post('https://gs1ksa.org/api/GROUTE/gpc/search', {
-        "gpc": "10000068"
+        "gpc": gs1ProductData?.gpc_code
         // TODO: convert harcoded value to dynamic value
       })
       .then((response) => {
@@ -174,47 +176,47 @@ const CodificationTab = () => {
         // getHsCode()
         break;
 
-    
+
       case "UNSPSC":
         setIsLoading(true);
-          axios.post('https://gs1ksa.org/api/GROUTE/find/commodity/by/brick/title', {
-            "brick_title": selectedRow?.ItemEnglishName
-            // "brick_title": "Caramel/Toffee Apples" // this is a test
+        axios.post('https://gs1ksa.org/api/GROUTE/find/commodity/by/brick/title', {
+          "brick_title": selectedRow?.ItemEnglishName
+          // "brick_title": "Caramel/Toffee Apples" // this is a test
+        })
+          .then((response) => {
+            console.log(response?.data)
+            setUnspsc(response?.data)
+            setIsLoading(false);
           })
-            .then((response) => {
-              console.log(response?.data)
-              setUnspsc(response?.data)
-              setIsLoading(false);
-            })
-            .catch((error) => {
-              console.log(error);
-              openSnackbar(
-                error?.response?.data?.message ?? "something went wrong!",
-                "error"
-              );
-              setIsLoading(false);
-            })
+          .catch((error) => {
+            console.log(error);
+            openSnackbar(
+              error?.response?.data?.message ?? "something went wrong!",
+              "error"
+            );
+            setIsLoading(false);
+          })
         break;
 
       case "OTHER":
         setIsLoading(true);
-          axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
-            // "brick_title": selectedRow?.ItemEnglishName
-            "hs_name": "Pineapples" // this is a test
+        axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
+          // "brick_title": selectedRow?.ItemEnglishName
+          "hs_name": "Pineapples" // this is a test
+        })
+          .then((response) => {
+            console.log(response?.data)
+            setOthers(response?.data)
+            setIsLoading(false);
           })
-            .then((response) => {
-              console.log(response?.data)
-              setOthers(response?.data)
-              setIsLoading(false);
-            })
-            .catch((error) => {
-              console.log(error);
-              openSnackbar(
-                error?.response?.data?.message ?? "something went wrong!",
-                "error"
-              );
-              setIsLoading(false);
-            })
+          .catch((error) => {
+            console.log(error);
+            openSnackbar(
+              error?.response?.data?.message ?? "something went wrong!",
+              "error"
+            );
+            setIsLoading(false);
+          })
         break;
 
       // Add more cases for other options
@@ -407,70 +409,70 @@ const CodificationTab = () => {
         );
 
 
-        // case "UNSPSC":
-        // return (
-        //   <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
-        //     {unspsc?.data?.map((item, index) => (
-        //       <div
-        //         key={index} 
-        //       >
-        //         <div className='h-auto w-full shadow-xl p-3 rounded-md'>
-        //           <h1 className='text-primary'>Family Title: <span className='text-black'>{item.FamilyTitle}</span></h1>
-        //           <h1 className='text-primary'>Class: <span className='text-black'>{item.Class}</span></h1>
-        //           <h1 className='text-primary'>ClassTitle: <span className='text-black'>{item.ClassTitle}</span></h1>
-        //           <h1 className='text-primary'>Commodity: <span className='text-black'>{item.Commodity}</span></h1>
-        //           <h1 className='text-primary'>CommodityTitle: <span className='text-black'>{item.CommodityTitle}</span></h1>
-        //         </div>
-        //       </div>
-        //     ))}
-        //   </div>
-        // );
-        case "UNSPSC":
-          return (
-            <div className='h-[80vh] w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
-              {unspsc?.data?.map((group, groupIndex) => (
-                <div key={groupIndex}>
-                  {group.map((item, index) => (
-                    <div
-                      key={index}
-                      className='shadow-xl p-3 rounded-md mb-2'
-                    >
-                      <h1 className='text-primary'>Family Title: <span className='text-black'>{item.FamilyTitle}</span></h1>
-                      <h1 className='text-primary'>Class: <span className='text-black'>{item.Class}</span></h1>
-                      <h1 className='text-primary'>ClassTitle: <span className='text-black'>{item.ClassTitle}</span></h1>
-                      <h1 className='text-primary'>Commodity: <span className='text-black'>{item.Commodity}</span></h1>
-                      <h1 className='text-primary'>CommodityTitle: <span className='text-black'>{item.CommodityTitle}</span></h1>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          );
-
-
-        case "OTHER":
-          return (
-            <div className='h-[80vh] w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
-              {others?.data?.map((item, index) => (
-                <div key={index}>
-                  <div className='h-auto w-full shadow-xl p-3 rounded-md'>
-                    <h1 className='text-primary'>Segment Code: <span className='text-black'>{item.SegmentCode}</span></h1>
-                    <h1 className='text-primary'>Segment Title: <span className='text-black'>{item.SegmentTitle}</span></h1>
-                    <h1 className='text-primary'>Family Code: <span className='text-black'>{item.FamilyCode}</span></h1>
+      // case "UNSPSC":
+      // return (
+      //   <div className='h-52 w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+      //     {unspsc?.data?.map((item, index) => (
+      //       <div
+      //         key={index} 
+      //       >
+      //         <div className='h-auto w-full shadow-xl p-3 rounded-md'>
+      //           <h1 className='text-primary'>Family Title: <span className='text-black'>{item.FamilyTitle}</span></h1>
+      //           <h1 className='text-primary'>Class: <span className='text-black'>{item.Class}</span></h1>
+      //           <h1 className='text-primary'>ClassTitle: <span className='text-black'>{item.ClassTitle}</span></h1>
+      //           <h1 className='text-primary'>Commodity: <span className='text-black'>{item.Commodity}</span></h1>
+      //           <h1 className='text-primary'>CommodityTitle: <span className='text-black'>{item.CommodityTitle}</span></h1>
+      //         </div>
+      //       </div>
+      //     ))}
+      //   </div>
+      // );
+      case "UNSPSC":
+        return (
+          <div className='h-[80vh] w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+            {unspsc?.data?.map((group, groupIndex) => (
+              <div key={groupIndex}>
+                {group.map((item, index) => (
+                  <div
+                    key={index}
+                    className='shadow-xl p-3 rounded-md mb-2'
+                  >
                     <h1 className='text-primary'>Family Title: <span className='text-black'>{item.FamilyTitle}</span></h1>
-                    <h1 className='text-primary'>Class Code: <span className='text-black'>{item.ClassCode}</span></h1>
-                    <h1 className='text-primary'>Class Title: <span className='text-black'>{item.ClassTitle}</span></h1>
-                    <h1 className='text-primary'>Brick Code: <span className='text-black'>{item.BrickCode}</span></h1>
-                    <h1 className='text-primary'>Brick Title: <span className='text-black'>{item.BrickTitle}</span></h1>
-                    <h1 className='text-primary'>Attribute Code: <span className='text-black'>{item.AttributeCode}</span></h1>
-                    <h1 className='text-primary'>Attribute Title: <span className='text-black'>{item.AttributeTitle}</span></h1>
-                    <h1 className='text-primary'>Attribute Value Code: <span className='text-black'>{item.AttributeValueCode}</span></h1>
-                    <h1 className='text-primary'>Attribute Value Title: <span className='text-black'>{item.AttributeValueTitle}</span></h1>
+                    <h1 className='text-primary'>Class: <span className='text-black'>{item.Class}</span></h1>
+                    <h1 className='text-primary'>ClassTitle: <span className='text-black'>{item.ClassTitle}</span></h1>
+                    <h1 className='text-primary'>Commodity: <span className='text-black'>{item.Commodity}</span></h1>
+                    <h1 className='text-primary'>CommodityTitle: <span className='text-black'>{item.CommodityTitle}</span></h1>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            ))}
           </div>
-          );
+        );
+
+
+      case "OTHER":
+        return (
+          <div className='h-[80vh] w-full mt-2 px-2 border-2 border-dashed overflow-x-auto'>
+            {others?.data?.map((item, index) => (
+              <div key={index}>
+                <div className='h-auto w-full shadow-xl p-3 rounded-md'>
+                  <h1 className='text-primary'>Segment Code: <span className='text-black'>{item.SegmentCode}</span></h1>
+                  <h1 className='text-primary'>Segment Title: <span className='text-black'>{item.SegmentTitle}</span></h1>
+                  <h1 className='text-primary'>Family Code: <span className='text-black'>{item.FamilyCode}</span></h1>
+                  <h1 className='text-primary'>Family Title: <span className='text-black'>{item.FamilyTitle}</span></h1>
+                  <h1 className='text-primary'>Class Code: <span className='text-black'>{item.ClassCode}</span></h1>
+                  <h1 className='text-primary'>Class Title: <span className='text-black'>{item.ClassTitle}</span></h1>
+                  <h1 className='text-primary'>Brick Code: <span className='text-black'>{item.BrickCode}</span></h1>
+                  <h1 className='text-primary'>Brick Title: <span className='text-black'>{item.BrickTitle}</span></h1>
+                  <h1 className='text-primary'>Attribute Code: <span className='text-black'>{item.AttributeCode}</span></h1>
+                  <h1 className='text-primary'>Attribute Title: <span className='text-black'>{item.AttributeTitle}</span></h1>
+                  <h1 className='text-primary'>Attribute Value Code: <span className='text-black'>{item.AttributeValueCode}</span></h1>
+                  <h1 className='text-primary'>Attribute Value Title: <span className='text-black'>{item.AttributeValueTitle}</span></h1>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
 
     }
   }
