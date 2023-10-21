@@ -269,7 +269,7 @@ const CodificationTab = () => {
                   className="w-5 h-5 ml-1"
                   alt=""
                 />
-                <select className='bg-[#00acee] w-full text-white' value={selectedBrick} onChange={handleBrickChange}>
+                <select className='bg-[#00acee] w-full text-white' onChange={handleBrickChange}>
                   <option value="">GPC Bricks Title</option>
                   {uniqueGPCBricks(gpcBricks)?.map((brick, index) => (
                     <option key={index} value={brick.BrickTitle}>

@@ -234,7 +234,7 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
           </IconButton>
 
 
-          <div className="p-3 h-full shadow" style={{ maxHeight: '550px', overflowY: 'auto' }}>
+          <div className="p-3 h-full shadow" style={{ maxHeight: '620px', overflowY: 'auto' }}>
             {/* new design */}
             <div className="popup-header -mt-3">
               <div className="w-full font-body p-6 shadow-xl rounded-md text-black bg-[#D4EDDA] text-xl mb:2 md:mb-5">
