@@ -63,18 +63,20 @@ const GtinJourney = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await newRequest.get(`/getAllLocationData`);
+        // const response = await newRequest.get(`/getAllLocationData`);
+        const response = await newRequest.get(`/getLocationsByGTIN?planNumber=6287028930005`);
 
-        const newData = response.data.map((item) => {
-          return {
-            ...item,
-            longitude: item.Longitude.toString(),
-            latitude: item.Latitude.toString(),
-          };
-        });
+        // const newData = response.data.map((item) => {
+        //   return {
+        //     ...item,
+        //     longitude: item.Longitude.toString(),
+        //     latitude: item.Latitude.toString(),
+        //   };
+        // });
+        // console.log(newData);
+        const newData = response.data;
         console.log(newData);
         setAllLocations(newData);
-        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -82,7 +84,19 @@ const GtinJourney = () => {
 
     fetchData();
   }, []);
-
+  // rray(16) [
+  //   {
+  //     ID: 38,
+  //     Latitude: 24.740637,
+  //     Longitude: 46.711927,
+  //     Name: '2',
+  //     LocationName: null,
+  //     Serial: 'kxv1234587523a',
+  //     Description: 'Distribution Center',
+  //     Type: 'event',
+  //     longitude: '46.711927',
+  //     latitude: '24.740637'
+  //   },
   // const allLocations = [
 
   //   { latitude: '24.740637', longitude: '46.711927', name: '2', locationName: null, serial: 'kxv1234587523a', description: 'Distribution Center', type: 'event' },
@@ -156,9 +170,9 @@ const GtinJourney = () => {
             </button>
 
             <div>
-                <p className='text-white font-medium sm:text-xl text-sm ml-5'>Product Information powered by GS1 Standards</p>
-            </div>  
-          </div> 
+              <p className='text-white font-medium sm:text-xl text-sm ml-5'>Product Information powered by GS1 Standards</p>
+            </div>
+          </div>
           {/* GTIN search */}
           <div className='w-[60%] mt-2 overflow-auto h-full flex-shrink-0' style={{ maxHeight: '115vh' }}>
 
@@ -179,7 +193,7 @@ const GtinJourney = () => {
                     </table>
                   </div>
                 </div>
-              </div> 
+              </div>
 
               <div className="w-full md:w-1/3 flex flex-col justify-center items-center -mt-6 p-8">
                 {/* Add your image element here */}
