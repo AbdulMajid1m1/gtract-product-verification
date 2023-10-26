@@ -9,7 +9,10 @@ import { ShipmentDocColumns } from '../../utils/datatablesource';
 import DataTable from '../../Components/Datatable/Datatable';
 import EventsMap from '../../Components/Mapcomponent/EventsMap';
 import socketIOClient from 'socket.io-client';
-const ENDPOINT = "http://127.0.0.1:7000";
+import { socketConnection } from '../../utils/config';
+import { ConstructionSharp } from '@mui/icons-material';
+import phpRequest from '../../utils/phpRequest';
+const ENDPOINT = socketConnection
 
 
 const GtinJourney = () => {
@@ -18,7 +21,7 @@ const GtinJourney = () => {
   const [productPriceState, setProductPriceState] = useState(null); // State to store API data
   const navigate = useNavigate();
   const [epcisData, setEpcisData] = useState([]);
-
+  const gtinNo = '6287004290024';
   // Full Screen Code
   const [isFullscreen, setIsFullscreen] = useState(document.fullscreenElement != null);
 
@@ -59,30 +62,59 @@ const GtinJourney = () => {
       socket.disconnect();
     };
   }, []);
+  async function fetchData() {
+    try {
+      // const response = await newRequest.get(`/getAllLocationData`);
+      const response = await newRequest.get(`/getLocationsByGTIN?planNumber=${gtinNo}`);
+
+
+      // const newData = response.data.map((item) => {
+      //   return {
+      //     ...item,
+      //     longitude: item.Longitude.toString(),
+      //     latitude: item.Latitude.toString(),
+      //   };
+      // });
+      // console.log(newData);
+      const newData = response.data;
+      console.log(newData);
+      setAllLocations(newData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function fetchGtinData() {
+    phpRequest
+      .post("/search/member/gtin", { gtin: gtinNo })
+      .then((response) => {
+        
+        if (response.data?.gtinArr === undefined || Object.keys(response.data?.gtinArr).length === 0) {
+          // Display error message when the array is empty
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'No data found',
+
+            timer: 2000,
+            showConfirmButton: false,
+
+          })
+          return;
+        }
+        setData(response.data);
+        console.log(response.data);
+        setProductPriceState(response.data?.gtinArr?.productPrice);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        // const response = await newRequest.get(`/getAllLocationData`);
-        const response = await newRequest.get(`/getLocationsByGTIN?planNumber=6287028930005`);
-
-        // const newData = response.data.map((item) => {
-        //   return {
-        //     ...item,
-        //     longitude: item.Longitude.toString(),
-        //     latitude: item.Latitude.toString(),
-        //   };
-        // });
-        // console.log(newData);
-        const newData = response.data;
-        console.log(newData);
-        setAllLocations(newData);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
     fetchData();
+    fetchGtinData()
   }, []);
   // rray(16) [
   //   {
@@ -231,7 +263,7 @@ const GtinJourney = () => {
           <div className='h-auto w-full mt-2'>
             <div style={{ marginLeft: '-11px', marginRight: '-11px', marginTop: '-40px' }}>
 
-              <DataTable data={data} title={"EPCIS Events"} columnsName={ShipmentDocColumns} backButton={false}
+              <DataTable data={epcisData} title={"EPCIS Events"} columnsName={ShipmentDocColumns} backButton={false}
                 secondaryColor="secondary"
                 // loading={isLoading}
                 uniqueId="GtinJourneyId"
