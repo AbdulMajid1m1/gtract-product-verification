@@ -103,7 +103,7 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
   const products = [
     { name: "GTIN", value: data?.barcode },
     { name: "Brand name", value: data?.BrandName },
-    { name: "Product description", value: data?.HsDescription },
+    { name: "Product description", value: data?.productnameenglish },
     { name: "Product image URL", value: data?.front_image },
     { name: "Global product category", value: data?.gpc },
     // check if data has unitcode then show value
