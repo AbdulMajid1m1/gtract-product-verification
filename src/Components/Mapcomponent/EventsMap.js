@@ -48,101 +48,101 @@ const EventsMap = ({ google, selectedBatch, selectedSerial, allLocations }) => {
         if (selectedSerial) bodyData.serial = selectedSerial;
 
 
-        console.log(bodyData)
-        try {
-            const res = await axios.get(`https://gs1ksa.org/api/search/event/gtin/with/maps`, {
-                params: bodyData
-            });
-            const locations = res.data?.googleMap?.locations;
-            console.log(locations)
+        // console.log(bodyData)
+        // // try {
+        // const res = await axios.get(`https://gs1ksa.org/api/search/event/gtin/with/maps`, {
+        //     params: bodyData
+        // });
+        // const locations = res.data?.googleMap?.locations;
+        // console.log(locations)
 
-            if (Array.isArray(locations)) {
-                // const allLocations = locations
-                //     .filter(location => location.latitude && location.longitude)
-                //     .map(location => ({
-                //         latitude: location.latitude,
-                //         longitude: location.longitude,
-                //         name: location?.name,
-                //         locationName: location?.locationName,
-                //         serial: location?.serial,
-                //         description: location?.description,
-                //         type: location?.type,
-                //     }));
+        if (Array.isArray(allLocations)) {
+            // const allLocations = locations
+            //     .filter(location => location.latitude && location.longitude)
+            //     .map(location => ({
+            //         latitude: location.latitude,
+            //         longitude: location.longitude,
+            //         name: location?.name,
+            //         locationName: location?.locationName,
+            //         serial: location?.serial,
+            //         description: location?.description,
+            //         type: location?.type,
+            //     }));
 
-                // console.log(allLocations)
+            // console.log(allLocations)
 
 
-                setlocationsapi(allLocations);
+            setlocationsapi(allLocations);
 
-                const filteredLocations = filterLocationsBySelection(allLocations);
+            const filteredLocations = filterLocationsBySelection(allLocations);
 
-                // Break the locations into blocks of up to 10
-                const blocks = [];
-                let k = 0;
-                for (let i = 0; i < filteredLocations.length; i++) {
-                    if (i !== 0 && i % 10 === 0) {
-                        k++;
-                    }
-                    if (typeof blocks[k] === 'undefined') {
-                        blocks[k] = [];
-                    }
-                    blocks[k].push(filteredLocations[i]);
+            // Break the locations into blocks of up to 10
+            const blocks = [];
+            let k = 0;
+            for (let i = 0; i < filteredLocations.length; i++) {
+                if (i !== 0 && i % 10 === 0) {
+                    k++;
                 }
+                if (typeof blocks[k] === 'undefined') {
+                    blocks[k] = [];
+                }
+                blocks[k].push(filteredLocations[i]);
+            }
 
-                const ds = new window.google.maps.DirectionsService();
-                const fetchedDirections = [];
+            const ds = new window.google.maps.DirectionsService();
+            const fetchedDirections = [];
 
-                const promiseArr = blocks.map(block => {
-                    return new Promise((resolve, reject) => {
-                        const waypts = [];
-                        for (let j = 1; j < block.length - 1; j++) {
-                            waypts.push({
-                                location: `${block[j].latitude},${block[j].longitude}`,
-                                stopover: false
-                            });
-                        }
-
-                        ds.route({
-                            origin: `${block[0].latitude},${block[0].longitude}`,
-                            destination: `${block[block.length - 1].latitude},${block[block.length - 1].longitude}`,
-                            waypoints: waypts,
-                            travelMode: 'DRIVING'
-                        }, (result, status) => {
-                            if (status === window.google.maps.DirectionsStatus.OK) {
-                                fetchedDirections.push(result);
-                                resolve(result);
-                            } else if (status === window.google.maps.DirectionsStatus.ZERO_RESULTS) {
-                                console.warn("No route found for the following data, ignoring this route:");
-                                console.warn("Origin:", `${block[0].latitude},${block[0].longitude}`);
-                                console.warn("Destination:", `${block[block.length - 1].latitude},${block[block.length - 1].longitude}`);
-                                console.warn("Waypoints:", waypts);
-                                resolve();  // Resolve without adding to fetchedDirections
-                            } else {
-                                console.error("Other error fetching directions for block:", block);
-                                console.error("Status:", status);
-                                reject(status);
-                            }
+            const promiseArr = blocks.map(block => {
+                return new Promise((resolve, reject) => {
+                    const waypts = [];
+                    for (let j = 1; j < block.length - 1; j++) {
+                        waypts.push({
+                            location: `${block[j].latitude},${block[j].longitude}`,
+                            stopover: false
                         });
+                    }
 
-
+                    ds.route({
+                        origin: `${block[0].latitude},${block[0].longitude}`,
+                        destination: `${block[block.length - 1].latitude},${block[block.length - 1].longitude}`,
+                        waypoints: waypts,
+                        travelMode: 'DRIVING'
+                    }, (result, status) => {
+                        if (status === window.google.maps.DirectionsStatus.OK) {
+                            fetchedDirections.push(result);
+                            resolve(result);
+                        } else if (status === window.google.maps.DirectionsStatus.ZERO_RESULTS) {
+                            console.warn("No route found for the following data, ignoring this route:");
+                            console.warn("Origin:", `${block[0].latitude},${block[0].longitude}`);
+                            console.warn("Destination:", `${block[block.length - 1].latitude},${block[block.length - 1].longitude}`);
+                            console.warn("Waypoints:", waypts);
+                            resolve();  // Resolve without adding to fetchedDirections
+                        } else {
+                            console.error("Other error fetching directions for block:", block);
+                            console.error("Status:", status);
+                            reject(status);
+                        }
                     });
+
+
+                });
+            });
+
+            Promise.all(promiseArr)
+                .then(() => {
+                    setDirections(fetchedDirections);
+                })
+                .catch(error => {
+                    console.error("Error fetching some directions:", error);
                 });
 
-                Promise.all(promiseArr)
-                    .then(() => {
-                        setDirections(fetchedDirections);
-                    })
-                    .catch(error => {
-                        console.error("Error fetching some directions:", error);
-                    });
-
-                sessionStorage.setItem("mapsResponse", JSON.stringify(res?.data));
-            } else {
-                console.log('Invalid API response');
-            }
-        } catch (err) {
-            console.log(err);
+            sessionStorage.setItem("mapsResponse", JSON.stringify(allLocations));
+        } else {
+            console.log('Invalid API response');
         }
+        // } catch (err) {
+        //     console.log(err);
+        // }
     };
 
 
