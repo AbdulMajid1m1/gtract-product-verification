@@ -114,7 +114,7 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
 
   // Second Tab table Data
   const productInformation = [
-    { name: "Company Name", value: data?.productnameenglish },
+    { name: "Company Name", value: data?.productnameenglish }, 
     { name: "Licence Key", value: data?.barcode },
     { name: "Licence Type", value: "null" },
     { name: "Product image URL", value: data?.front_image },
