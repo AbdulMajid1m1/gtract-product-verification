@@ -110,7 +110,7 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
     { name: "Net content", value: data?.unit && data?.unit && `${data?.unit} ${data?.unit}` },
     { name: "Country of sale", value: data?.countrySale },
 
-  ];
+  ]; 
 
   // Second Tab table Data
   const productInformation = [
