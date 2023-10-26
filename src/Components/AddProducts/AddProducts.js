@@ -103,18 +103,18 @@ const AddProducts = ({ title, handleOpen, handleClose, open, handleRefetch, barc
   const products = [
     { name: "GTIN", value: data?.barcode },
     { name: "Brand name", value: data?.BrandName },
-    { name: "Product description", value: data?.HsDescription },
+    { name: "Product description", value: data?.productnameenglish },
     { name: "Product image URL", value: data?.front_image },
     { name: "Global product category", value: data?.gpc },
     // check if data has unitcode then show value
     { name: "Net content", value: data?.unit && data?.unit && `${data?.unit} ${data?.unit}` },
     { name: "Country of sale", value: data?.countrySale },
 
-  ];
+  ]; 
 
   // Second Tab table Data
   const productInformation = [
-    { name: "Company Name", value: data?.productnameenglish },
+    { name: "Company Name", value: data?.productnameenglish }, 
     { name: "Licence Key", value: data?.barcode },
     { name: "Licence Type", value: "null" },
     { name: "Product image URL", value: data?.front_image },
