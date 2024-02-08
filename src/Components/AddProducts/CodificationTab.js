@@ -19,7 +19,7 @@ const CodificationTab = () => {
   const gs1ProductData = JSON.parse(sessionStorage.getItem("gs1ProductData"));
   console.log(gs1ProductData);
   console.log(gs1ProductData?.gpc)
-  const number = gs1ProductData.gpc.split("-")[0];
+  const number = gs1ProductData?.gpc?.split("-")[0];
   console.log(number);
   const toggleOpen = () => {
     setOpen(!open);
@@ -205,26 +205,26 @@ const CodificationTab = () => {
 
         break;
 
-        case "OTHER":
-          setIsLoading(true);
-            axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
-                 "hs_name": selectedRow?.ItemEnglishName
-              // "hs_name": "Pineapples" // this is a test
-            })
-              .then((response) => {
-                console.log(response?.data)
-                setOthers(response?.data)
-                setIsLoading(false);
-              })
-              .catch((error) => {
-                console.log(error);
-                openSnackbar(
-                  error?.response?.data?.message ?? "something went wrong!",
-                  "error"
-                );
-                setIsLoading(false);
-              })
-          break;
+      case "OTHER":
+        setIsLoading(true);
+        axios.post('https://gs1ksa.org/api/GROUTE/find/brick/by/hs/name', {
+          "hs_name": selectedRow?.ItemEnglishName
+          // "hs_name": "Pineapples" // this is a test
+        })
+          .then((response) => {
+            console.log(response?.data)
+            setOthers(response?.data)
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            openSnackbar(
+              error?.response?.data?.message ?? "something went wrong!",
+              "error"
+            );
+            setIsLoading(false);
+          })
+        break;
 
       // Add more cases for other options
       default:
